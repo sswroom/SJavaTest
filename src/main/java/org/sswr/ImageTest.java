@@ -17,13 +17,21 @@ public class ImageTest {
 			{
 				System.out.println("Error in reading image");
 			}
-			else if (ImageUtil.saveAsJpg(imgList.getImage(0), new FileOutputStream("/home/sswroom/Progs/photo2.jpg"), 1.0f))
+			if (ImageUtil.saveAsJpg(imgList.getImage(0), new FileOutputStream("/home/sswroom/Progs/photo2.jpg"), 1.0f))
 			{
 				System.out.println("Image exported");
 			}
 			else
 			{
 				System.out.println("Error in exporting to jpg");
+			}
+			if (ImageUtil.saveAsJpgBySize(imgList.getImage(0), new FileOutputStream("/home/sswroom/Progs/photo3.jpg"), 1500000, 2000000))
+			{
+				System.out.println("Image by size exported");
+			}
+			else
+			{
+				System.out.println("Error in exporting to jpg by size");
 			}
 		}
 		catch (FileNotFoundException ex)
