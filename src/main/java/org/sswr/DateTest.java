@@ -13,5 +13,6 @@ public class DateTest
 		ZonedDateTime zdt = DateTimeUtil.newZonedDateTime(t);
 		System.out.println("zdt = "+zdt);
 		System.out.println("zdt.t = "+DateTimeUtil.getTimeMillis(zdt));
+		System.out.println("toTS(zdt) = "+DateTimeUtil.toTimestamp(zdt));
 	}
 }
