@@ -4,9 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-import javax.imageio.ImageIO;
-
-import org.sswr.util.data.DataTools;
 import org.sswr.util.media.ImageList;
 import org.sswr.util.media.ImageUtil;
 import org.sswr.util.media.NearestNeighbourResizer;
