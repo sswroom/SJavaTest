@@ -23,6 +23,7 @@ public class ImageTest {
 				System.out.println("Error in reading image");
 			}
 			StaticImage img = imgList.getImage(0);
+			System.out.println(img.toString());
 			Size2D size = Resizer.calcOutputSize(img.getWidth(), img.getHeight(), img.getPixelAspectRatio(), 200, 200, ResizeAspectRatio.SQUARE_PIXEL);
 			StaticImage newImg = new NearestNeighbourResizer().resize(img, size);
 			if (ImageUtil.saveAsJpg(newImg, new FileOutputStream("/home/sswroom/Progs/photo2.jpg"), 1.0f))
