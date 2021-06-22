@@ -68,7 +68,7 @@ public class SNMPTest
 	public static void main(String args[])
 	{
 		snmpManagerTest();
-//		snmpMIBTest();
-//		snmpWalkTest();
+		snmpMIBTest();
+		snmpWalkTest();
 	}
 }
