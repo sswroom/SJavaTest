@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.StringUtil;
+import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.net.SNMPOIDInfo;
 
@@ -45,13 +46,19 @@ public class MiscTest
 
 	public static void loadResourceTest2()
 	{
-		List<SNMPOIDInfo> objs = ResourceLoader.loadObjects(SNMPOIDInfo.class, "SNMPOIDDB.oidList.txt");
+		List<SNMPOIDInfo> objs = ResourceLoader.loadObjects(SNMPOIDInfo.class, "SNMPOIDDB.oidList.txt", null);
 		System.out.println("SNMPOIDInfo = "+DataTools.toObjectString(objs));
+	}
+
+	public static void detectOS()
+	{
+		System.out.println(System.getProperties().toString());
+		System.out.println("OS = "+OSInfo.getOSType());
 	}
 
 	public static void main(String args[])
 	{
-		int type = 2;
+		int type = 3;
 		switch (type)
 		{
 		case 0:
@@ -62,6 +69,9 @@ public class MiscTest
 			break;
 		case 2:
 			loadResourceTest2();
+			break;
+		case 3:
+			detectOS();
 			break;
 		}	
 	}
