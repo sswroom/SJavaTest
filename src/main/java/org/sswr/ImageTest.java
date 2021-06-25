@@ -17,10 +17,14 @@ public class ImageTest {
 	{
 		try
 		{
-			ImageList imgList = ImageUtil.load(new FileInputStream("/home/sswroom/Progs/photo.jpg"));
+			String fileName;
+			//fileName = "/home/sswroom/Progs/photo.jpg";
+			fileName = "/home/sswroom/Progs/Temp/insp1624622649783.jpg";
+			ImageList imgList = ImageUtil.load(new FileInputStream(fileName));
 			if (imgList == null)
 			{
 				System.out.println("Error in reading image");
+				return;
 			}
 			StaticImage img = imgList.getImage(0);
 			System.out.println(img.toString());
