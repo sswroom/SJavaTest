@@ -162,7 +162,7 @@ public class ImageTest {
 				return;
 			}
 			StaticImage img = imgList.getImage(0);
-			//System.out.println(img.toString());
+			System.out.println(img.toString());
 			Size2D size = Resizer.calcOutputSize(img.getWidth(), img.getHeight(), img.getPixelAspectRatio(), pxSize, pxSize, ResizeAspectRatio.SQUARE_PIXEL);
 			StaticImage newImg = new NearestNeighbourResizer().resize(img, size);
 			if (ImageUtil.saveAsJpg(newImg, new FileOutputStream(destFile), 1.0f))

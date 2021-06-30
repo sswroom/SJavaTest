@@ -12,7 +12,7 @@ public class DbTest
 	public static void main(String args[])
 	{
 		DBUtil.setSqlLogger(new LogTool().addPrintLog(System.out, LogLevel.RAW));
-		Connection conn = DBUtil.openAccessFile("C:\\Progs\\RP Register System Ver 3.0.accdb");
+		Connection conn = DBUtil.openAccessFile("C:\\Progs\\RP Register System Ver 3.0.accdb", null);
 		if (conn != null)
 		{
 			try
