@@ -5,9 +5,12 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.sswr.util.data.DataTools;
+import org.sswr.util.data.DateTimeUtil;
+import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
+import org.sswr.util.io.StreamUtil;
 import org.sswr.util.net.SNMPOIDInfo;
 
 public class MiscTest
@@ -25,13 +28,17 @@ public class MiscTest
 
 	public static void loadResourceTest()
 	{
-		InputStream stm = ResourceLoader.load(SNMPOIDInfo.class, "SNMPOIDDB.oidList.txt");
+		SharedLong lastModified = new SharedLong();
+		InputStream stm = ResourceLoader.load(SNMPOIDInfo.class, "SNMPOIDDB.oidList.txt", lastModified);
 		if (stm == null)
 		{
 			System.out.println("Error in loading resource");
 		}
 		else
 		{
+			System.out.println("InputStream class = " + stm.getClass().getName());
+			System.out.println("Last modified = " + DateTimeUtil.newZonedDateTime(lastModified.value));
+			System.out.println("Length = "+StreamUtil.getLength(stm));
 			System.out.println("Loaded stream");
 			try
 			{
@@ -58,7 +65,7 @@ public class MiscTest
 
 	public static void main(String args[])
 	{
-		int type = 3;
+		int type = 1;
 		switch (type)
 		{
 		case 0:
