@@ -10,14 +10,14 @@ import org.sswr.util.net.SNMPAgentInfo;
 import org.sswr.util.net.SNMPBindingItem;
 import org.sswr.util.net.SNMPClient;
 import org.sswr.util.net.SNMPErrorStatus;
-import org.sswr.util.net.SNMPMIB;
+import org.sswr.util.net.ASN1MIB;
 import org.sswr.util.net.SNMPManager;
 
 public class SNMPTest
 {
 	private static void snmpMIBTest()
 	{
-		SNMPMIB mib = new SNMPMIB();
+		ASN1MIB mib = new ASN1MIB();
 		StringBuilder sb = new StringBuilder();
 		mib.loadFile("/home/sswroom/Progs/VCClass/MIBs/NAS-MIB", sb);
 		System.out.println(sb.toString());

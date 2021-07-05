@@ -11,7 +11,7 @@ import org.sswr.util.data.StringUtil;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
-import org.sswr.util.net.SNMPOIDInfo;
+import org.sswr.util.net.ASN1OIDInfo;
 
 public class MiscTest
 {
@@ -29,7 +29,7 @@ public class MiscTest
 	public static void loadResourceTest()
 	{
 		SharedLong lastModified = new SharedLong();
-		InputStream stm = ResourceLoader.load(SNMPOIDInfo.class, "SNMPOIDDB.oidList.txt", lastModified);
+		InputStream stm = ResourceLoader.load(ASN1OIDInfo.class, "SNMPOIDDB.oidList.txt", lastModified);
 		if (stm == null)
 		{
 			System.out.println("Error in loading resource");
@@ -53,7 +53,7 @@ public class MiscTest
 
 	public static void loadResourceTest2()
 	{
-		List<SNMPOIDInfo> objs = ResourceLoader.loadObjects(SNMPOIDInfo.class, "SNMPOIDDB.oidList.txt", null);
+		List<ASN1OIDInfo> objs = ResourceLoader.loadObjects(ASN1OIDInfo.class, "SNMPOIDDB.oidList.txt", null);
 		System.out.println("SNMPOIDInfo = "+DataTools.toObjectString(objs));
 	}
 
