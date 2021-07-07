@@ -30,23 +30,28 @@ public class MQTTTest implements MQTTPublishMessageHdlr
 		try
 		{
 			MQTTClient cli;
-//			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1883, TCPClientType.PLAIN, 30, null, null);
-			System.setProperty("javax.net.ssl.trustStore","keystore.jks");
-			System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 8883, TCPClientType.SSL, 30, null, null);
+			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1883, TCPClientType.PLAIN, 30, null, null);
+//			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1884, TCPClientType.PLAIN, 30, "ro", "readonly");
+//			System.setProperty("javax.net.ssl.trustStore","keystore.jks");
+//			System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
+//			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 8883, TCPClientType.SSL, 30, null, null);
+//			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 8885, TCPClientType.SSL, 30, "ro", "readonly");
 			if (cli.getConnError() == ConnError.SUCCESS)
 			{
 				cli.handlePublishMessage(new MQTTTest());
 				cli.subscribe("#");
-
-				try
+				
+				if (cli.getConnError() == ConnError.SUCCESS)
 				{
-					System.out.println("Connected to broker");
-					System.in.read();
-				}
-				catch (IOException ex)
-				{
-					ex.printStackTrace();
+					try
+					{
+						System.out.println("Connected to broker");
+						System.in.read();
+					}
+					catch (IOException ex)
+					{
+						ex.printStackTrace();
+					}
 				}
 			}
 			else
