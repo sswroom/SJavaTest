@@ -6,12 +6,21 @@ import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
@@ -121,9 +130,64 @@ public class MiscTest
 		}
 	}
 
+	public static void emailTest()
+	{
+		String smtpFrom = "";
+		String toList = "";
+		boolean tls = false;
+		String smtpHost = "";
+		Integer smtpPort = 25;
+		String username = "";
+		String password = "";
+		Authenticator auth = null;
+
+		Properties props = new Properties();
+		if (tls)
+		{
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.ssl.trust", smtpHost);
+		}
+		props.put("mail.smtp.host", smtpHost);
+		props.put("mail.smtp.port", (smtpPort == null)?(""+25):(""+smtpPort));
+		if (username != null && username.length() > 0 && password != null && password.length() > 0)
+		{
+			props.put("mail.smtp.auth", "true");
+			auth = new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
+				}
+			};
+		}
+
+
+		Session session;
+		if (auth != null)
+		{
+			session = Session.getInstance(props, auth);
+		}
+		else
+		{
+			session = Session.getInstance(props);
+		}
+		try
+		{
+			MimeMessage message = new MimeMessage(session);
+			message.setSubject("測試中");
+			message.setContent("中文測試, akfsld;jkafjka;fdsjkaf", "text/html; charset=utf-8");
+			message.setSentDate(new Date(System.currentTimeMillis()));
+			message.setFrom(new InternetAddress(smtpFrom));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toList));
+			Transport.send(message);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[])
 	{
-		int type = 4;
+		int type = 5;
 		switch (type)
 		{
 		case 0:
@@ -140,6 +204,9 @@ public class MiscTest
 			break;
 		case 4:
 			otpTest();
+			break;
+		case 5:
+			emailTest();
 			break;
 		}	
 	}
