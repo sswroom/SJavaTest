@@ -22,6 +22,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.sswr.util.crypto.IntKeyHandler;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
 import org.sswr.util.data.SharedLong;
@@ -185,9 +186,18 @@ public class MiscTest
 		}
 	}
 
+	public static void keyGenTest()
+	{
+		int id = 123456;
+		System.out.println("id = "+id);
+		String key = IntKeyHandler.generate(id, 16, true);
+		System.out.println("key = "+key);
+		System.out.println("extracted id = "+IntKeyHandler.parseKey(key, true));
+	}
+
 	public static void main(String args[])
 	{
-		int type = 5;
+		int type = 6;
 		switch (type)
 		{
 		case 0:
@@ -207,6 +217,9 @@ public class MiscTest
 			break;
 		case 5:
 			emailTest();
+			break;
+		case 6:
+			keyGenTest();
 			break;
 		}	
 	}
