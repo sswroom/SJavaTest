@@ -1,84 +1,90 @@
 package org.sswr;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
-import org.sswr.util.net.MQTTClient;
+import org.sswr.util.net.MQTTStaticClient;
+import org.sswr.util.net.FailoverType;
 import org.sswr.util.net.MQTTConn;
 import org.sswr.util.net.MQTTEventHdlr;
+import org.sswr.util.net.MQTTFailoverClient;
 import org.sswr.util.net.MQTTPublishMessageHdlr;
 import org.sswr.util.net.TCPClientType;
-import org.sswr.util.net.MQTTClient.ConnError;
+import org.sswr.util.net.MQTTStaticClient.ConnError;
 
 public class MQTTTest implements MQTTEventHdlr
 {
 	public static void test0()
 	{
-		try
-		{
-			MQTTConn.publishMessage(InetAddress.getLocalHost(), 1883, TCPClientType.PLAIN, null, null, "Testing", "Hello");
-		}
-		catch (UnknownHostException ex)
-		{
-			ex.printStackTrace();
-		}
+		MQTTConn.publishMessage("localhost", 1883, TCPClientType.PLAIN, null, null, "Testing", "Hello");
 	}
 
 	public static void test1()
 	{
-		try
-		{
-			MQTTClient cli;
+		MQTTStaticClient cli;
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1883, TCPClientType.PLAIN, 30, null, null, true);
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1884, TCPClientType.PLAIN, 30, "ro", "readonly", true);
-			System.setProperty("javax.net.ssl.trustStore","keystore.jks");
-			System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 8883, TCPClientType.SSL, 30, null, null, true);
+		System.setProperty("javax.net.ssl.trustStore","keystore.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
+		cli = new MQTTStaticClient("test.mosquitto.org", 8883, TCPClientType.SSL, 30, null, null, true);
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 8885, TCPClientType.SSL, 30, "ro", "readonly", true);
-			if (cli.getConnError() == ConnError.CONNECTED)
-			{
-				cli.handleEvents(new MQTTTest());
-				cli.subscribe("#", null);
-				cli.subscribe("/go-eCharger/#", new MQTTPublishMessageHdlr(){
-					@Override
-					public void onPublishMessage(String topic, byte[] buff, int buffOfst, int buffSize) {
-					}
-				});
-				cli.subscribe("/go-eCharger/+/loc", new MQTTPublishMessageHdlr(){
-					@Override
-					public void onPublishMessage(String topic, byte[] buff, int buffOfst, int buffSize) {
-						System.out.println("eChargerLoc Topic "+topic+" -> "+new String(buff, buffOfst, buffSize, StandardCharsets.UTF_8));		
-					}
-				});
-					
-				try
-				{
-					System.out.println("Connected to broker");
-					//cli.publish("/test", "Testing");
-					System.in.read();
-				}
-				catch (IOException ex)
-				{
-					ex.printStackTrace();
-				}
-			}
-			else
-			{
-				System.out.println("Error in connecting to broker: "+cli.getConnError().toString());
-			}
-			cli.close();
-		}
-		catch (UnknownHostException ex)
+		if (cli.getConnError() == ConnError.CONNECTED)
 		{
-			ex.printStackTrace();
+			cli.handleEvents(new MQTTTest());
+			cli.subscribe("#", null);
+			cli.subscribe("/go-eCharger/#", new MQTTPublishMessageHdlr(){
+				@Override
+				public void onPublishMessage(String topic, byte[] buff, int buffOfst, int buffSize) {
+				}
+			});
+			cli.subscribe("/go-eCharger/+/loc", new MQTTPublishMessageHdlr(){
+				@Override
+				public void onPublishMessage(String topic, byte[] buff, int buffOfst, int buffSize) {
+					System.out.println("eChargerLoc Topic "+topic+" -> "+new String(buff, buffOfst, buffSize, StandardCharsets.UTF_8));		
+				}
+			});
+				
+			try
+			{
+				System.out.println("Connected to broker");
+				//cli.publish("/test", "Testing");
+				System.in.read();
+			}
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
+			}
 		}
+		else
+		{
+			System.out.println("Error in connecting to broker: "+cli.getConnError().toString());
+		}
+		cli.close();
+	}
+
+	private static void test2()
+	{
+		MQTTFailoverClient client = new MQTTFailoverClient(FailoverType.MASTER_SLAVE);
+		client.addClient(new MQTTStaticClient("localhost", 1883, TCPClientType.PLAIN, 30, null, null, true));
+		client.addClient(new MQTTStaticClient("localhost", 1884, TCPClientType.PLAIN, 30, null, null, true));
+		int i = 20;
+		while (i-- > 0)
+		{
+			client.publish("test", ""+System.currentTimeMillis());
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (Exception e)
+			{
+			}
+		}
+		client.close();
 	}
 
 	public static void main(String args[])
 	{
-		int testType = 1;
+		int testType = 2;
 		switch (testType)
 		{
 		case 0:
@@ -86,6 +92,9 @@ public class MQTTTest implements MQTTEventHdlr
 			break;
 		case 1:
 			test1();
+			break;
+		case 2:
+			test2();
 			break;
 		}
 	}
