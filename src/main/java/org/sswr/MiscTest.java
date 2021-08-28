@@ -22,6 +22,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.IntKeyHandler;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
@@ -195,9 +197,32 @@ public class MiscTest
 		System.out.println("extracted id = "+IntKeyHandler.parseKey(key, true));
 	}
 
+	public static void bcryptTest()
+	{
+		Bcrypt bcrypt = new Bcrypt();
+		long t1;
+		long t2;
+		boolean result;
+		t1 = System.currentTimeMillis();
+		result = bcrypt.isMatch("$2a$12$kQtGrSy5/39p96XsfTnpmuG1RiTw0KPKTSTsLuaooVr476.Ti9zcW", "admin");
+		t2 = System.currentTimeMillis();
+		System.out.println("Equals: "+result + ", t = "+(t2 - t1));
+
+		BCryptPasswordEncoder bcryptpwd = new BCryptPasswordEncoder(10);
+		t1 = System.currentTimeMillis();
+		result = bcryptpwd.matches("admin", "$2a$12$kQtGrSy5/39p96XsfTnpmuG1RiTw0KPKTSTsLuaooVr476.Ti9zcW");
+		t2 = System.currentTimeMillis();
+		System.out.println("Equals2: "+result + ", t = "+(t2 - t1));
+
+		t1 = System.currentTimeMillis();
+		result = bcrypt.isMatch("$2a$12$aroG/pwwPj1tU5fl9a9pkO4rydAmkXRj/LqfHZOSnR6LGAZ.z.jwa", "ptAP\"mcg6oH.\";c0U2_oll.OKi<!ku");
+		t2 = System.currentTimeMillis();
+		System.out.println("Equals3: "+result + ", t = "+(t2 - t1));
+	}
+
 	public static void main(String args[])
 	{
-		int type = 6;
+		int type = 7;
 		switch (type)
 		{
 		case 0:
@@ -220,6 +245,9 @@ public class MiscTest
 			break;
 		case 6:
 			keyGenTest();
+			break;
+		case 7:
+			bcryptTest();
 			break;
 		}	
 	}
