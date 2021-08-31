@@ -236,7 +236,17 @@ public class MiscTest
 			}
 			else
 			{
-				System.out.println("Error in pinging to "+addr.toString());
+				System.out.println("Error in pinging to "+addr.getHostAddress());
+			}
+
+			addr = InetAddress.getByName("::1");
+			if (IcmpUtil.sendEcho(addr, respTime_us, ttl))
+			{
+				System.out.println("Ping success, ttl = "+ttl.value+", time = "+(respTime_us.value * 0.001)+"ms");
+			}
+			else
+			{
+				System.out.println("Error in pinging to "+addr.getHostAddress());
 			}
 		}
 		catch (Exception ex)
