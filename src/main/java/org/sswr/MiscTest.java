@@ -2,6 +2,7 @@ package org.sswr;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +28,7 @@ import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.IntKeyHandler;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
+import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
@@ -34,6 +36,7 @@ import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
 import org.sswr.util.net.ASN1OIDInfo;
+import org.sswr.util.net.IcmpUtil;
 
 public class MiscTest
 {
@@ -220,9 +223,31 @@ public class MiscTest
 		System.out.println("Equals3: "+result + ", t = "+(t2 - t1));
 	}
 
+	public static void pingTest()
+	{
+		try
+		{
+			SharedInt respTime_us = new SharedInt();
+			SharedInt ttl = new SharedInt();
+			InetAddress addr = InetAddress.getByName("192.168.0.15");
+			if (IcmpUtil.sendEcho(addr, respTime_us, ttl))
+			{
+				System.out.println("Ping success, ttl = "+ttl.value+", time = "+(respTime_us.value * 0.001)+"ms");
+			}
+			else
+			{
+				System.out.println("Error in pinging to "+addr.toString());
+			}
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[])
 	{
-		int type = 7;
+		int type = 8;
 		switch (type)
 		{
 		case 0:
@@ -248,6 +273,9 @@ public class MiscTest
 			break;
 		case 7:
 			bcryptTest();
+			break;
+		case 8:
+			pingTest();
 			break;
 		}	
 	}
