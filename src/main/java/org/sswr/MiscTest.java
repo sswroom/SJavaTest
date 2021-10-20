@@ -36,6 +36,7 @@ import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
 import org.sswr.util.net.ASN1OIDInfo;
+import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
 
 public class MiscTest
@@ -255,9 +256,36 @@ public class MiscTest
 		}
 	}
 
+	public static void httpTest()
+	{
+		try
+		{
+			HTTPMyClient cli = new HTTPMyClient("http://127.0.0.1:12345", "GET");
+			cli.addHeader("User-Agent", "Test/1.0");
+			cli.addHeader("Accept", "*");
+			System.out.println(cli.GetRespStatus());
+			System.out.println(cli.getSvrAddr());
+			System.out.println("Headers");
+			int i = 0;
+			int j = cli.getRespHeaderCnt();
+			while (i < j)
+			{
+				System.out.println("Header "+i+" = "+cli.getRespHeader(i));
+				i++;
+			}
+			byte[] ret = cli.readToEnd();
+			System.out.println("Reply size = "+ret.length);
+			cli.close();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[])
 	{
-		int type = 8;
+		int type = 9;
 		switch (type)
 		{
 		case 0:
@@ -286,6 +314,9 @@ public class MiscTest
 			break;
 		case 8:
 			pingTest();
+			break;
+		case 9:
+			httpTest();
 			break;
 		}	
 	}
