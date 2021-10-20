@@ -258,7 +258,8 @@ public class MiscTest
 
 	public static void httpTest()
 	{
-		try
+		System.out.println(HTTPMyClient.getAsString("http://127.0.0.1:12345", 200));
+/*		try
 		{
 			HTTPMyClient cli = new HTTPMyClient("http://127.0.0.1:12345", "GET");
 			cli.addHeader("User-Agent", "Test/1.0");
@@ -280,7 +281,7 @@ public class MiscTest
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-		}
+		}*/
 	}
 
 	public static void main(String args[])
