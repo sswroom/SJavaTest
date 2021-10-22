@@ -14,5 +14,6 @@ public class DateTest
 		System.out.println("zdt = "+zdt);
 		System.out.println("zdt.t = "+DateTimeUtil.getTimeMillis(zdt));
 		System.out.println("toTS(zdt) = "+DateTimeUtil.toTimestamp(zdt));
+		System.out.println(DateTimeUtil.parse("2020-12-31T16:00:00.123+00:00"));
 	}
 }
