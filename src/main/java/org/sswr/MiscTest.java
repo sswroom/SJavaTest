@@ -1,5 +1,6 @@
 package org.sswr;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -32,6 +33,7 @@ import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
+import org.sswr.util.io.FileUtil;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
@@ -284,9 +286,22 @@ public class MiscTest
 		}*/
 	}
 
+	public static void fileSearchTest()
+	{
+		List<File> files = FileUtil.search("~/Temp/log/*t/a*");
+		System.out.println("Count = "+files.size());
+		int i = 0;
+		int j = files.size();
+		while (i < j)
+		{
+			System.out.println(files.get(i).getPath());
+			i++;
+		}
+	}
+
 	public static void main(String args[])
 	{
-		int type = 9;
+		int type = 10;
 		switch (type)
 		{
 		case 0:
@@ -318,6 +333,9 @@ public class MiscTest
 			break;
 		case 9:
 			httpTest();
+			break;
+		case 10:
+			fileSearchTest();
 			break;
 		}	
 	}
