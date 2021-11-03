@@ -13,6 +13,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -34,9 +36,11 @@ import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.io.FileUtil;
+import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
+import org.sswr.util.io.ZipUtil;
 import org.sswr.util.net.ASN1OIDInfo;
 import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
@@ -299,9 +303,28 @@ public class MiscTest
 		}
 	}
 
-	public static void main(String args[])
+	public static void executeTest()
 	{
-		int type = 10;
+		StringBuilder sb = new StringBuilder();
+		int code = MyProcess.run("python", new String[]{"/home/sswroom/Progs/Temp/test.py", "param1"}, sb);
+		System.out.println("Code = "+code);
+		System.out.println("Message = "+sb.toString());
+	}
+
+	public static void zipTest() throws IOException, ZipException
+	{
+		ZipFile zip = new ZipFile(new File("/home/sswroom/Progs/Temp/Temp2.zip"));
+		File dest = new File("/home/sswroom/Progs/Temp/Temp2");
+		dest.mkdirs();
+		if (!ZipUtil.extract(zip, dest))
+		{
+			System.out.println("Error in extracting the zip file");
+		}
+	}
+
+	public static void main(String args[]) throws Exception
+	{
+		int type = 12;
 		switch (type)
 		{
 		case 0:
@@ -336,6 +359,12 @@ public class MiscTest
 			break;
 		case 10:
 			fileSearchTest();
+			break;
+		case 11:
+			executeTest();
+			break;
+		case 12:
+			zipTest();
 			break;
 		}	
 	}
