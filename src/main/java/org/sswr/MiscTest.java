@@ -322,9 +322,18 @@ public class MiscTest
 		}
 	}
 
+	public static void calc1Test()
+	{
+		double angle = -0.038;
+		double h = 1.5;
+		double tilting = Math.tan(angle * Math.PI / 180.0) * h;
+		System.out.println("Tilting = "+(-1 + tilting));
+		System.out.println("Calc = "+ (Math.atan(tilting / h) * 180 / Math.PI));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 12;
+		int type = 13;
 		switch (type)
 		{
 		case 0:
@@ -365,6 +374,9 @@ public class MiscTest
 			break;
 		case 12:
 			zipTest();
+			break;
+		case 13:
+			calc1Test();
 			break;
 		}	
 	}

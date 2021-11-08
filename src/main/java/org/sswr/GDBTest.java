@@ -34,15 +34,8 @@ public class GDBTest
 			r.close();
 		}
 
-		try
-		{
-			System.out.println("Testing:");
-			System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, new QueryConditions<Lamppost>(Lamppost.class).intEquals("objectId", 10), null, null, 0, 100)));
-		}
-		catch (NoSuchFieldException ex)
-		{
-			ex.printStackTrace();
-		}
+		System.out.println("Testing:");
+		System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, null, null, "objectId desc", 0, 0)));
 		fgdb.close();
 	}
 }
