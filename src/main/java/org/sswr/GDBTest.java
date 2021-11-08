@@ -3,22 +3,27 @@ package org.sswr;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sswr.gdbmodel.Lamppost;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.db.DBReader;
+import org.sswr.util.db.QueryConditions;
 import org.sswr.util.io.FileUtil;
+import org.sswr.util.io.LogLevel;
+import org.sswr.util.io.LogTool;
 import org.sswr.util.map.FileGDBDir;
 
 public class GDBTest
 {
 	public static void main(String []args)
 	{
-		FileGDBDir fgdb = FileGDBDir.openDir(FileUtil.getRealPath("~/Progs/Temp/E20210522_PLIS.gdb"));
+		LogTool logger = new LogTool().addPrintLog(System.out, LogLevel.RAW);
+		FileGDBDir fgdb = FileGDBDir.openDir(FileUtil.getRealPath("~/Progs/Temp/E20210522_PLIS.gdb"), logger);
 		List<String> names = new ArrayList<String>();
 		fgdb.getTableNames(names);
 		System.out.println(DataTools.toObjectString(names));
 		String name = names.get(5);
 		System.out.println(name);
-		DBReader r = fgdb.getTableData("LAMPPOST", 0, null, null);
+		DBReader r = fgdb.getTableData("LAMPPOST", List.of("OBJECTID", "Shape"), 0, null, null);
 		if (r != null)
 		{
 			int i = 10;
@@ -27,6 +32,16 @@ public class GDBTest
 				System.out.println(DataTools.toObjectString(r.getRowMap()));
 			}
 			r.close();
+		}
+
+		try
+		{
+			System.out.println("Testing:");
+			System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, new QueryConditions<Lamppost>(Lamppost.class).intEquals("objectId", 10), null, null, 0, 100)));
+		}
+		catch (NoSuchFieldException ex)
+		{
+			ex.printStackTrace();
 		}
 		fgdb.close();
 	}
