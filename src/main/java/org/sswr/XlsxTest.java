@@ -12,7 +12,7 @@ public class XlsxTest
 	public static void main(String []args) throws IOException
 	{
 		String fileName = FileUtil.getRealPath("~/Progs/Temp/Test.xlsx");
-		XlsxValidator xlsx = new XlsxValidator(new FileInputStream(fileName), new String[]{"ColA", "ColB", "ColC", "ColD"});
+		XlsxValidator xlsx = new XlsxValidator(new FileInputStream(fileName), new String[]{"ColA", "ColB", "ColC", "ColD", "ColE"});
 		while (xlsx.nextRow())
 		{
 			System.out.println(DataTools.toObjectString(xlsx.getRowAsMap()));
