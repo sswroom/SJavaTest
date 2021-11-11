@@ -6,7 +6,6 @@ import java.util.List;
 import org.sswr.gdbmodel.Lamppost;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.db.DBReader;
-import org.sswr.util.db.QueryConditions;
 import org.sswr.util.io.FileUtil;
 import org.sswr.util.io.LogLevel;
 import org.sswr.util.io.LogTool;
