@@ -33,6 +33,19 @@ public class GDBTest
 			r.close();
 		}
 
+		long t1 = System.currentTimeMillis();
+		r = fgdb.getTableData("LAMPPOST", null, 0, null, null);
+		if (r != null)
+		{
+			while (r.readNext())
+			{
+				r.getRowMap();
+			}
+			r.close();
+		}
+		t1 = System.currentTimeMillis() - t1;
+		System.out.println("Time for getRowMap = "+t1);
+
 		System.out.println("Testing:");
 		System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, null, null, "objectId desc", 0, 0)));
 		fgdb.close();

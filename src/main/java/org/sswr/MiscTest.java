@@ -1,10 +1,13 @@
 package org.sswr;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
@@ -31,11 +34,13 @@ import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.IntKeyHandler;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
+import org.sswr.util.data.JSONParser;
 import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.io.FileUtil;
+import org.sswr.util.io.IOStream;
 import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
@@ -331,9 +336,19 @@ public class MiscTest
 		System.out.println("Calc = "+ (Math.atan(tilting / h) * 180 / Math.PI));
 	}
 
+	public static void jsonTest() throws IOException
+	{
+		String fileName = FileUtil.getRealPath("~/Progs/Temp/error.json", false);
+		FileInputStream fis = new FileInputStream(fileName);
+		String jsonStr = new String(fis.readAllBytes(), StandardCharsets.UTF_8);
+		fis.close();
+		Object o = JSONParser.parse(jsonStr);
+		System.out.println(o.getClass().getName());
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 13;
+		int type = 14;
 		switch (type)
 		{
 		case 0:
@@ -377,6 +392,9 @@ public class MiscTest
 			break;
 		case 13:
 			calc1Test();
+			break;
+		case 14:
+			jsonTest();
 			break;
 		}	
 	}
