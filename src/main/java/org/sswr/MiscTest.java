@@ -2,7 +2,6 @@ package org.sswr;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -40,7 +39,6 @@ import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.io.FileUtil;
-import org.sswr.util.io.IOStream;
 import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
