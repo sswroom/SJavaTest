@@ -22,6 +22,7 @@ import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xssf.usermodel.XSSFChart;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openxmlformats.schemas.drawingml.x2006.chart.STDispBlanksAs;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
 import org.sswr.util.io.FileUtil;
@@ -56,6 +57,7 @@ public class XlsxTest
 		Sheet dataSheet = wb.createSheet();
 		XSSFChart chart = XlsxUtil.createChart(graphSheet, DistanceUnit.Inch, 0.64, 1.61, 13.10, 5.53, "\nSETTLEMENT VS CHAINAGE");
 		XDDFLineChartData lineChartData = XlsxUtil.lineChart(chart, "ACCUMULATED SETTLEMENT", "CHAINAGE", AxisType.AT_CATEGORY);
+		XlsxUtil.setDisplayBlankAs(chart.getCTChart(), STDispBlanksAs.GAP);
 		if (testRowCnt > 1)
 		{
 			XlsxUtil.chartAddLegend(chart, LegendPosition.BOTTOM);
@@ -87,12 +89,16 @@ public class XlsxTest
 				i = 0;
 				while (i < j)
 				{
-					XlsxUtil.setCell(row, i + 1, numStyle, -1 + i * 0.1);
+					if (i != 5)
+					{
+						XlsxUtil.setCell(row, i + 1, numStyle, -1 + i * 0.1);
+					}
 					i++;
 				}
 				XDDFNumericalDataSource<Double> valSource = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet)dataSheet, new CellRangeAddress(rowNum, rowNum, 1, j));
 				XlsxUtil.addLineChartSeries(lineChartData, chainageSource, valSource, dateFmt.format(ts), testRowCnt > 1);
 			}
+			chart.setPlotOnlyVisibleCells(true);
 			chart.plot(lineChartData);
 		}
 
