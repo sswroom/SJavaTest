@@ -54,7 +54,7 @@ public class XlsxTest
 		CellStyle numStyle = XlsxUtil.createCellStyle(wb, font10, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, "0.###");
 		Sheet graphSheet = wb.createSheet();
 		Sheet dataSheet = wb.createSheet();
-		XSSFChart chart = XlsxUtil.createChart(graphSheet, DistanceUnit.Inch, 0.64, 1.61, 13.10, 5.53, "SETTLEMENT VS CHAINAGE");
+		XSSFChart chart = XlsxUtil.createChart(graphSheet, DistanceUnit.Inch, 0.64, 1.61, 13.10, 5.53, "\nSETTLEMENT VS CHAINAGE");
 		XDDFLineChartData lineChartData = XlsxUtil.lineChart(chart, "ACCUMULATED SETTLEMENT", "CHAINAGE", AxisType.AT_CATEGORY);
 		if (testRowCnt > 1)
 		{
@@ -66,32 +66,35 @@ public class XlsxTest
 		Row row = XlsxUtil.getRow(dataSheet, 0);
 		XlsxUtil.setCell(row, 0, dateStyle, "Date");
 		int i = 0;
-		int j = 10;
+		int j = 20;
 		while (i < j)
 		{
 			XlsxUtil.setCell(row, i + 1, numStyle, 112 + i * 0.1);
 			i++;
 		}
-		XDDFCategoryDataSource chainageSource = XDDFDataSourcesFactory.fromStringCellRange((XSSFSheet)dataSheet, new CellRangeAddress(0, 0, 1, j));
-
-		SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd");
-		rowNum = 0;
-		while (rowNum < testRowCnt)
+		if (testRowCnt > 0)
 		{
-			ts = DateTimeUtil.addDay(new Timestamp(System.currentTimeMillis()), rowNum - testRowCnt);
-			rowNum++;
-			row = XlsxUtil.getRow(dataSheet, rowNum);
-			XlsxUtil.setCell(row, 0, dateStyle, ts);
-			i = 0;
-			while (i < j)
+			XDDFCategoryDataSource chainageSource = XDDFDataSourcesFactory.fromStringCellRange((XSSFSheet)dataSheet, new CellRangeAddress(0, 0, 1, j));
+
+			SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd");
+			rowNum = 0;
+			while (rowNum < testRowCnt)
 			{
-				XlsxUtil.setCell(row, i + 1, numStyle, i * 0.1);
-				i++;
+				ts = DateTimeUtil.addDay(new Timestamp(System.currentTimeMillis()), rowNum - testRowCnt);
+				rowNum++;
+				row = XlsxUtil.getRow(dataSheet, rowNum);
+				XlsxUtil.setCell(row, 0, dateStyle, ts);
+				i = 0;
+				while (i < j)
+				{
+					XlsxUtil.setCell(row, i + 1, numStyle, -1 + i * 0.1);
+					i++;
+				}
+				XDDFNumericalDataSource<Double> valSource = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet)dataSheet, new CellRangeAddress(rowNum, rowNum, 1, j));
+				XlsxUtil.addLineChartSeries(lineChartData, chainageSource, valSource, dateFmt.format(ts), testRowCnt > 1);
 			}
-			XDDFNumericalDataSource<Double> valSource = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet)dataSheet, new CellRangeAddress(rowNum, rowNum, 1, j));
-			XlsxUtil.addLineChartSeries(lineChartData, chainageSource, valSource, dateFmt.format(ts), testRowCnt > 1);
+			chart.plot(lineChartData);
 		}
-		chart.plot(lineChartData);
 
 		FileOutputStream fos = new FileOutputStream(fileName, false);
 		wb.write(fos);
