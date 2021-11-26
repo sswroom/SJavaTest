@@ -46,8 +46,8 @@ public class XlsxTest
 
 	private static void test1() throws IOException
 	{
-		int testRowCnt = 1;
-		String fileName = FileUtil.getRealPath("/Progs/Temp/TestChart.xlsx");
+		int testRowCnt = 2;
+		String fileName = FileUtil.getRealPath("~/Progs/Temp/TestChart.xlsx");
 		Workbook wb;
 		wb = new XSSFWorkbook();
 		Font font10 = XlsxUtil.createFont(wb, "Arial", 10, false);
@@ -56,7 +56,7 @@ public class XlsxTest
 		Sheet graphSheet = wb.createSheet();
 		Sheet dataSheet = wb.createSheet();
 		XSSFChart chart = XlsxUtil.createChart(graphSheet, DistanceUnit.Inch, 0.64, 1.61, 13.10, 5.53, "\nSETTLEMENT VS CHAINAGE");
-		XDDFLineChartData lineChartData = XlsxUtil.lineChart(chart, "ACCUMULATED SETTLEMENT", "CHAINAGE", AxisType.AT_CATEGORY);
+		XDDFLineChartData lineChartData = XlsxUtil.lineChart(chart, "ACCUMULATED SETTLEMENT", "CHAINAGE", AxisType.CATEGORY);
 		XlsxUtil.setDisplayBlankAs(chart.getCTChart(), STDispBlanksAs.GAP);
 		if (testRowCnt > 1)
 		{
