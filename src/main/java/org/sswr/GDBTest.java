@@ -2,6 +2,7 @@ package org.sswr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.sswr.gdbmodel.Lamppost;
 import org.sswr.util.data.DataTools;
@@ -34,20 +35,21 @@ public class GDBTest
 		}
 
 		long t1 = System.currentTimeMillis();
+		List<Map<String, Object>> objList = new ArrayList<Map<String, Object>>();
 		r = fgdb.getTableData("LAMPPOST", null, 0, null, null);
 		if (r != null)
 		{
 			while (r.readNext())
 			{
-				r.getRowMap();
+				objList.add(r.getRowMap());
 			}
 			r.close();
 		}
 		t1 = System.currentTimeMillis() - t1;
 		System.out.println("Time for getRowMap = "+t1);
 
-		System.out.println("Testing:");
-		System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, null, null, "objectId desc", 0, 0)));
+//		System.out.println("Testing:");
+//		System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, null, null, "objectId desc", 0, 0)));
 		fgdb.close();
 	}
 }
