@@ -9,6 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.DayOfWeek;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -344,9 +347,51 @@ public class MiscTest
 		System.out.println(o.getClass().getName());
 	}
 
+	private static boolean inMonthlyRange(ZonedDateTime lastCheck, ZonedDateTime currTime, int monthlyAdj)
+	{
+		ZonedDateTime timeRangeFrom = DateTimeUtil.toMonthStart(currTime);
+		ZonedDateTime timeRangeTo;
+		while (timeRangeFrom.getDayOfWeek() != DayOfWeek.MONDAY)
+		{
+			timeRangeFrom = timeRangeFrom.plusDays(1);
+		}
+		if (timeRangeFrom.plusDays(monthlyAdj).compareTo(currTime) > 0)
+		{
+			timeRangeFrom = DateTimeUtil.toMonthStart(timeRangeFrom.minusMonths(1));
+			while (timeRangeFrom.getDayOfWeek() != DayOfWeek.MONDAY)
+			{
+				timeRangeFrom = timeRangeFrom.plusDays(1);
+			}
+		}
+		timeRangeTo = DateTimeUtil.toMonthStart(timeRangeFrom.plusMonths(1));
+		while (timeRangeTo.getDayOfWeek() != DayOfWeek.MONDAY)
+		{
+			timeRangeTo = timeRangeTo.plusDays(1);
+		}
+		if (timeRangeFrom.plusDays(monthlyAdj).compareTo(lastCheck) <= 0 && timeRangeTo.plusDays(monthlyAdj).compareTo(lastCheck) > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static void timeCheckTest()
+	{
+		int monthlyAdj = 0;
+		long currTime = System.currentTimeMillis();
+		long t = 1639933727220L;
+		System.out.println("inMonthlyRange = "+inMonthlyRange(DateTimeUtil.newZonedDateTime(t), DateTimeUtil.newZonedDateTime(currTime), monthlyAdj));
+		System.out.println("inMonthlyRange = "+inMonthlyRange(DateTimeUtil.newZonedDateTime(t), ZonedDateTime.of(2022, 1, 2, 0, 0, 0, 0, ZoneId.systemDefault()), monthlyAdj));
+		System.out.println("inMonthlyRange = "+inMonthlyRange(DateTimeUtil.newZonedDateTime(t), ZonedDateTime.of(2022, 1, 3, 0, 0, 0, 0, ZoneId.systemDefault()), monthlyAdj));
+		System.out.println("inMonthlyRange = "+inMonthlyRange(DateTimeUtil.newZonedDateTime(t), ZonedDateTime.of(2021, 12, 6, 0, 0, 0, 0, ZoneId.systemDefault()), monthlyAdj));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 14;
+		int type = 15;
 		switch (type)
 		{
 		case 0:
@@ -393,6 +438,9 @@ public class MiscTest
 			break;
 		case 14:
 			jsonTest();
+			break;
+		case 15:
+			timeCheckTest();
 			break;
 		}	
 	}
