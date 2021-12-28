@@ -46,6 +46,7 @@ import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
+import org.sswr.util.io.SystemInfoUtil;
 import org.sswr.util.io.ZipUtil;
 import org.sswr.util.net.ASN1OIDInfo;
 import org.sswr.util.net.HTTPMyClient;
@@ -389,9 +390,18 @@ public class MiscTest
 		System.out.println("inMonthlyRange = "+inMonthlyRange(DateTimeUtil.newZonedDateTime(t), ZonedDateTime.of(2021, 12, 6, 0, 0, 0, 0, ZoneId.systemDefault()), monthlyAdj));
 	}
 
+	public static void sysInfoTest()
+	{
+		System.out.println("OS Storage Free Space = "+DataTools.toObjectString(SystemInfoUtil.getFreeSpaces()));
+		System.out.println("Memory status = "+DataTools.toObjectString(SystemInfoUtil.getMemoryStatus()));
+		//"Memory Total / Used / Free = ", Specific Processes's CPU and memory usage
+		SystemInfoUtil info = new SystemInfoUtil(List.of("rpis-webapp.jar"));
+		System.out.println("Process status = "+DataTools.toObjectString(info.getProcessStatus()));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 15;
+		int type = 16;
 		switch (type)
 		{
 		case 0:
@@ -441,6 +451,9 @@ public class MiscTest
 			break;
 		case 15:
 			timeCheckTest();
+			break;
+		case 16:
+			sysInfoTest();
 			break;
 		}	
 	}
