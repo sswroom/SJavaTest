@@ -395,7 +395,7 @@ public class MiscTest
 		System.out.println("OS Storage Free Space = "+DataTools.toObjectString(SystemInfoUtil.getFreeSpaces()));
 		System.out.println("Memory status = "+DataTools.toObjectString(SystemInfoUtil.getMemoryStatus()));
 		//"Memory Total / Used / Free = ", Specific Processes's CPU and memory usage
-		System.out.println("Process status = "+DataTools.toObjectString(SystemInfoUtil.getProcessStatus(List.of("rpis-webapp.jar", "Code.exe"))));
+		System.out.println("Process status = "+DataTools.toObjectString(SystemInfoUtil.getProcessStatus(List.of("rpis-webapp.jar", "rpis-ctrl.jar", "web-app.jar", "api-app.jar"))));
 	}
 
 	public static void main(String args[]) throws Exception
