@@ -398,9 +398,26 @@ public class MiscTest
 		System.out.println("Process status = "+DataTools.toObjectString(SystemInfoUtil.getProcessStatus(List.of("rpis-webapp.jar", "rpis-ctrl.jar", "web-app.jar", "api-app.jar"))));
 	}
 
+	public static void splitTest()
+	{
+		String data = "ADMS,,,";
+		int i = 10000000;
+		String[] ret = null;
+		int j = 0;
+		long t = System.currentTimeMillis();
+		while (i-- > 0)
+		{
+			ret = StringUtil.split(data, ",");
+//			ret = data.split(",");
+			j += ret[0].length();
+		}
+		System.out.println("Time = "+(System.currentTimeMillis() - t));
+		System.out.println("Count = "+ret.length+", "+j);
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 16;
+		int type = 17;
 		switch (type)
 		{
 		case 0:
@@ -453,6 +470,9 @@ public class MiscTest
 			break;
 		case 16:
 			sysInfoTest();
+			break;
+		case 17:
+			splitTest();
 			break;
 		}	
 	}
