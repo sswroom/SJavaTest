@@ -340,10 +340,21 @@ public class MiscTest
 
 	public static void jsonTest() throws IOException
 	{
-		String fileName = FileUtil.getRealPath("~/Progs/Temp/error.json", false);
+		String fileName = FileUtil.getRealPath("~/Progs/Temp/20220311 JSON/data.json", false);
 		FileInputStream fis = new FileInputStream(fileName);
 		String jsonStr = new String(fis.readAllBytes(), StandardCharsets.UTF_8);
 		fis.close();
+		Object o = JSONParser.parse(jsonStr);
+		System.out.println(o.getClass().getName());
+	}
+
+	public static void jsonWebTest() throws IOException
+	{
+		HTTPMyClient cli = new HTTPMyClient("https://www.1823.gov.hk/common/ical/en.json", "GET");
+		byte[] buff = cli.readToEnd();
+		System.out.println(buff.length);
+		String jsonStr = new String(buff, StandardCharsets.UTF_8);
+		cli.close();
 		Object o = JSONParser.parse(jsonStr);
 		System.out.println(o.getClass().getName());
 	}
@@ -417,7 +428,7 @@ public class MiscTest
 
 	public static void main(String args[]) throws Exception
 	{
-		int type = 17;
+		int type = 18;
 		switch (type)
 		{
 		case 0:
@@ -473,6 +484,9 @@ public class MiscTest
 			break;
 		case 17:
 			splitTest();
+			break;
+		case 18:
+			jsonWebTest();
 			break;
 		}	
 	}
