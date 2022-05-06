@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -51,6 +52,7 @@ import org.sswr.util.io.ZipUtil;
 import org.sswr.util.net.ASN1OIDInfo;
 import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
+import org.sswr.util.net.SocketFactory;
 
 public class MiscTest
 {
@@ -426,9 +428,15 @@ public class MiscTest
 		System.out.println("Count = "+ret.length+", "+j);
 	}
 
+	public static void dnsListTest()
+	{
+		SocketFactory sockf = SocketFactory.create();
+		System.out.println("DNS List: "+DataTools.toObjectString(sockf.getDefDNS()));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 18;
+		int type = 19;
 		switch (type)
 		{
 		case 0:
@@ -487,6 +495,9 @@ public class MiscTest
 			break;
 		case 18:
 			jsonWebTest();
+			break;
+		case 19:
+			dnsListTest();
 			break;
 		}	
 	}
