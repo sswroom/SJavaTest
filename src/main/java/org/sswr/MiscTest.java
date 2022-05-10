@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.DayOfWeek;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -44,14 +45,20 @@ import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.io.FileUtil;
 import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
+import org.sswr.util.io.PrintStreamWriter;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
 import org.sswr.util.io.SystemInfoUtil;
 import org.sswr.util.io.ZipUtil;
 import org.sswr.util.net.ASN1OIDInfo;
+import org.sswr.util.net.DNSClient;
+import org.sswr.util.net.DNSRequestAnswer;
 import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.SocketFactory;
+import org.sswr.util.net.email.EmailMessage;
+import org.sswr.util.net.email.SMTPClient;
+import org.sswr.util.net.email.SMTPConnType;
 
 public class MiscTest
 {
@@ -433,9 +440,40 @@ public class MiscTest
 		System.out.println("DNS List: "+DataTools.toObjectString(sockf.getDefDNS()));
 	}
 
+	public static void smtpClientTest()
+	{
+		String host = "";
+		int port = 465;
+		SMTPConnType connType = SMTPConnType.STARTTLS;
+		String userName = "";
+		String password = "";
+		String fromName = "";
+		String fromAddr = "";
+		String toAddr = "";
+		SMTPClient smtp = new SMTPClient(host, port, connType, new PrintStreamWriter(System.out));
+		smtp.setPlainAuth(userName, password);
+		EmailMessage message = new EmailMessage();
+		message.setFrom(fromName, fromAddr);
+		message.setSubject("測試中");
+		message.setContent("中文測試, akfsld;jkafjka;fdsjkaf", "text/html; charset=utf-8");
+		message.setSentDate(ZonedDateTime.now());
+		message.addTo(null, toAddr);
+		smtp.send(message);
+	}
+
+	public static void dnsClientTest()
+	{
+		SocketFactory sockf = SocketFactory.create();
+		DNSClient cli = new DNSClient(sockf.getDefDNS()[0]);
+		List<DNSRequestAnswer> answers = new ArrayList<DNSRequestAnswer>();
+		cli.getByEmailDomainName(answers, "google.com");
+		System.out.println("Result: "+DataTools.toObjectString(answers));
+		cli.close();
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 19;
+		int type = 21;
 		switch (type)
 		{
 		case 0:
@@ -497,6 +535,12 @@ public class MiscTest
 			break;
 		case 19:
 			dnsListTest();
+			break;
+		case 20:
+			smtpClientTest();
+			break;
+		case 21:
+			dnsClientTest();
 			break;
 		}	
 	}
