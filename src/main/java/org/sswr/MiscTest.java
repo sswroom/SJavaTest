@@ -26,9 +26,11 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -57,6 +59,8 @@ import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.SocketFactory;
 import org.sswr.util.net.email.EmailMessage;
+import org.sswr.util.net.email.IMAPEmailReader;
+import org.sswr.util.net.email.POP3EmailReader;
 import org.sswr.util.net.email.SMTPClient;
 import org.sswr.util.net.email.SMTPConnType;
 
@@ -471,9 +475,63 @@ public class MiscTest
 		cli.close();
 	}
 
+	public static void pop3Test()
+	{
+		POP3EmailReader reader = new POP3EmailReader("127.0.0.1", 110, false, "sswroom@yahoo.com", "sswroom@yahoo.com");
+		reader.open();
+		Message[] messages = reader.getMessages();
+		int i = 0;
+		int j = messages.length;
+		while (i < j)
+		{
+			try
+			{
+				messages[i].writeTo(System.out);
+				messages[i].setFlag(Flag.DELETED, true);
+			}
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
+			}
+			catch (MessagingException ex)
+			{
+				ex.printStackTrace();
+			}
+			i++;
+		}
+		reader.close();
+	}
+
+	public static void imapTest()
+	{
+		IMAPEmailReader reader = new IMAPEmailReader("127.0.0.1", 993, true, "sswroom@yahoo.com", "sswroom@yahoo.com");
+		reader.openFolder("Inbox");
+/*		Message[] messages = reader.getMessages();
+		int i = 0;
+		int j = messages.length;
+		while (i < j)
+		{
+			try
+			{
+				messages[i].writeTo(System.out);
+				messages[i].setFlag(Flag.DELETED, true);
+			}
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
+			}
+			catch (MessagingException ex)
+			{
+				ex.printStackTrace();
+			}
+			i++;
+		}*/
+		reader.close();
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 21;
+		int type = 22;
 		switch (type)
 		{
 		case 0:
@@ -541,6 +599,12 @@ public class MiscTest
 			break;
 		case 21:
 			dnsClientTest();
+			break;
+		case 22:
+			pop3Test();
+			break;
+		case 23:
+			imapTest();
 			break;
 		}	
 	}
