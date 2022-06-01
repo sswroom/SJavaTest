@@ -59,8 +59,10 @@ import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.SocketFactory;
 import org.sswr.util.net.email.EmailMessage;
+import org.sswr.util.net.email.EmailUtil;
 import org.sswr.util.net.email.IMAPEmailReader;
 import org.sswr.util.net.email.POP3EmailReader;
+import org.sswr.util.net.email.ReceivedEmail;
 import org.sswr.util.net.email.SMTPClient;
 import org.sswr.util.net.email.SMTPConnType;
 
@@ -529,9 +531,17 @@ public class MiscTest
 		reader.close();
 	}
 
+	public static void emailFileTest()
+	{
+		Message msg = EmailUtil.loadFromEml(new File("/home/sswroom/Progs/SClass/build/Linux_dbg_x64/bin/SMTP/1653654195568.eml"));
+		System.out.println("Is SMIME: "+EmailUtil.isSMIME(msg));
+		ReceivedEmail email = EmailUtil.toReceivedEmail(msg);
+		System.out.println(email.toString());
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 22;
+		int type = 24;
 		switch (type)
 		{
 		case 0:
@@ -605,6 +615,9 @@ public class MiscTest
 			break;
 		case 23:
 			imapTest();
+			break;
+		case 24:
+			emailFileTest();
 			break;
 		}	
 	}
