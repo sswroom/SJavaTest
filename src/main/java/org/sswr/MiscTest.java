@@ -533,7 +533,9 @@ public class MiscTest
 
 	public static void emailFileTest()
 	{
-		Message msg = EmailUtil.loadFromEml(new File("/home/sswroom/Progs/SClass/build/Linux_dbg_x64/bin/SMTP/1653654195568.eml"));
+		Message msg;
+		//msg = EmailUtil.loadFromEml(new File("/home/sswroom/Progs/SClass/build/Linux_dbg_x64/bin/SMTP/1653654195568.eml"));
+		msg = EmailUtil.loadFromEml(new File("/home/sswroom/Progs/SClass/build/Linux_dbg_x64/bin/SMTP/1654172477245.eml"));
 		System.out.println("Is SMIME: "+EmailUtil.isSMIME(msg));
 		ReceivedEmail email = EmailUtil.toReceivedEmail(msg);
 		System.out.println(email.toString());
