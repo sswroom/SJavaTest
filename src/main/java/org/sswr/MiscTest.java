@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509CRL;
 import java.time.DayOfWeek;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -36,6 +37,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.sswr.util.crypto.Bcrypt;
+import org.sswr.util.crypto.CertUtil;
 import org.sswr.util.crypto.IntKeyHandler;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
@@ -541,9 +543,16 @@ public class MiscTest
 		System.out.println(email.toString());
 	}
 
+	public static void crlTest()
+	{
+		X509CRL crl = CertUtil.loadCRL("/home/sswroom/Progs/Temp/20220615 EMPC CRL/eCertCA1-10CRL1.crl");
+		
+		System.out.println("isValid = " + CertUtil.isValid(crl));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 24;
+		int type = 25;
 		switch (type)
 		{
 		case 0:
@@ -620,6 +629,9 @@ public class MiscTest
 			break;
 		case 24:
 			emailFileTest();
+			break;
+		case 25:
+			crlTest();
 			break;
 		}	
 	}
