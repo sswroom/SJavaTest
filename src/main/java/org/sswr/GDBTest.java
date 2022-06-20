@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.sswr.gdbmodel.Lamppost;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.db.DBReader;
 import org.sswr.util.io.FileUtil;
