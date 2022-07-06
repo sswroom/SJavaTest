@@ -35,6 +35,9 @@ import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.poi.hwpf.HWPFDocument;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.CertUtil;
@@ -54,6 +57,8 @@ import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
 import org.sswr.util.io.SystemInfoUtil;
 import org.sswr.util.io.ZipUtil;
+import org.sswr.util.media.PrintDocument;
+import org.sswr.util.media.Printer;
 import org.sswr.util.net.ASN1OIDInfo;
 import org.sswr.util.net.DNSClient;
 import org.sswr.util.net.DNSRequestAnswer;
@@ -67,6 +72,7 @@ import org.sswr.util.net.email.POP3EmailReader;
 import org.sswr.util.net.email.ReceivedEmail;
 import org.sswr.util.net.email.SMTPClient;
 import org.sswr.util.net.email.SMTPConnType;
+import org.sswr.util.office.PDFUtil;
 
 public class MiscTest
 {
@@ -550,9 +556,90 @@ public class MiscTest
 		System.out.println("isValid = " + CertUtil.isValid(crl));
 	}
 
+	public static void signTest()
+	{
+//		String certFile = "Certificate.cer";
+//		String payloadFile = "File.PLL";
+		String signFile = "File(Signed).PLL";
+
+		byte[] sign;
+		try
+		{
+			FileInputStream fis = new FileInputStream(signFile);
+			byte[] b64data = fis.readAllBytes();
+			fis.close();
+			sign = new Base64().decode(b64data);
+		}
+		catch (IOException ex)
+		{
+			System.out.println("Error in reading signature file");
+			ex.printStackTrace();
+			return;
+		}
+		if (sign == null)
+		{
+			System.out.println("Error in reading signature");
+		}
+		else
+		{
+			System.out.println("Signature length = "+sign.length);
+		}
+	}
+
+	public static void pdfTest()
+	{
+		String srcPDF = "/home/sswroom/Progs/Temp/ust210-83k-fl.pdf";
+		String pdf2 = "/home/sswroom/Progs/Temp/LoRa gateway to network server interface definition.pdf";
+		String destPDF = "/home/sswroom/Progs/Temp/pdfboxtest.pdf";
+		PDDocument doc = null;
+		PDDocument doc2 = null;
+		System.out.println(DataTools.toObjectString(Printer.getPrinterNames()));
+		try
+		{
+			doc = PDDocument.load(new File(srcPDF));
+			doc2 = PDDocument.load(new File(pdf2));
+			PDFUtil.append(doc, doc2);
+			doc.save(destPDF);
+			PDFUtil.close(doc);
+			PDFUtil.close(doc2);
+		}
+		catch (IOException ex)
+		{
+			PDFUtil.close(doc);
+			PDFUtil.close(doc2);
+			ex.printStackTrace();
+			return;
+		}
+	}
+
+	public static void printTest()
+	{
+		Printer printer = new Printer("PDF");
+		PrintDocument doc = printer.startPrint(new MyPrintHandler());
+		printer.endPrint(doc);
+	}
+
+	public static void printDocTest()
+	{
+		HWPFDocument printDoc;
+		try
+		{
+			printDoc = new HWPFDocument(new FileInputStream(new File("/home/sswroom/Progs/Temp/printTest.doc")));
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+			return;
+		}
+		printDoc.getRange();
+		Printer printer = new Printer("PDF");
+		PrintDocument doc = printer.startPrint(new MyPrintHandler());
+		printer.endPrint(doc);
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 25;
+		int type = 29;
 		switch (type)
 		{
 		case 0:
@@ -632,6 +719,18 @@ public class MiscTest
 			break;
 		case 25:
 			crlTest();
+			break;
+		case 26:
+			signTest();
+			break;
+		case 27:
+			pdfTest();
+			break;
+		case 28:
+			printTest();
+			break;
+		case 29:
+			printDocTest();
 			break;
 		}	
 	}
