@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509CRL;
 import java.time.DayOfWeek;
@@ -72,6 +73,7 @@ import org.sswr.util.net.email.POP3EmailReader;
 import org.sswr.util.net.email.ReceivedEmail;
 import org.sswr.util.net.email.SMTPClient;
 import org.sswr.util.net.email.SMTPConnType;
+import org.sswr.util.office.DocUtil;
 import org.sswr.util.office.PDFUtil;
 
 public class MiscTest
@@ -633,13 +635,29 @@ public class MiscTest
 		}
 		printDoc.getRange();
 		Printer printer = new Printer("PDF");
-		PrintDocument doc = printer.startPrint(new MyPrintHandler());
-		printer.endPrint(doc);
+		DocUtil.print(printer, printDoc);
+	}
+
+	public static void keyStoreTest()
+	{
+//		String fileName = "/etc/ssl/certs/java/cacerts";
+//		String password = "changeit";
+		String fileName = "/home/sswroom/Progs/Stoneroad/keys/vams/saml_token.jks";
+		String password = "changeit";
+		KeyStore ks = CertUtil.loadKeyStore(fileName, password);
+		if (ks == null)
+		{
+			System.out.println("Error in loading KeyStore");
+		}
+		else
+		{
+			System.out.println("isSingleCertWithKey = " + CertUtil.isKeyStoreSingleCertWithKey(ks, password));
+		}
 	}
 
 	public static void main(String args[]) throws Exception
 	{
-		int type = 29;
+		int type = 30;
 		switch (type)
 		{
 		case 0:
@@ -731,6 +749,9 @@ public class MiscTest
 			break;
 		case 29:
 			printDocTest();
+			break;
+		case 30:
+			keyStoreTest();
 			break;
 		}	
 	}

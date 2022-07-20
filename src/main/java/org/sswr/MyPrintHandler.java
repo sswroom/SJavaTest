@@ -1,9 +1,13 @@
 package org.sswr;
 
 import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
 
+import org.sswr.util.media.PageOrientation;
+import org.sswr.util.media.PaperSize;
 import org.sswr.util.media.PrintDocument;
 import org.sswr.util.media.PrintHandler;
+import org.sswr.util.media.PaperSize.PaperType;
 
 public class MyPrintHandler implements PrintHandler
 {
@@ -38,5 +42,17 @@ public class MyPrintHandler implements PrintHandler
 	@Override
 	public boolean endPrint(PrintDocument doc) {
 		return true;
+	}
+
+	@Override
+	public int getNumberOfPages() {
+		return 1;
+	}
+
+	@Override
+	public PageFormat getPageFormat(int pageNum)
+	{
+		PaperSize paperSize = new PaperSize(PaperType.PT_A4);
+		return paperSize.toPageForamt(PageOrientation.Portrait);
 	}
 }
