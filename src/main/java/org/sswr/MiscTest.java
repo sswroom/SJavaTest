@@ -66,7 +66,7 @@ import org.sswr.util.net.DNSRequestAnswer;
 import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.SocketFactory;
-import org.sswr.util.net.email.EmailMessage;
+import org.sswr.util.net.email.SMTPMessage;
 import org.sswr.util.net.email.EmailUtil;
 import org.sswr.util.net.email.IMAPEmailReader;
 import org.sswr.util.net.email.POP3EmailReader;
@@ -468,7 +468,7 @@ public class MiscTest
 		String toAddr = "";
 		SMTPClient smtp = new SMTPClient(host, port, connType, new PrintStreamWriter(System.out));
 		smtp.setPlainAuth(userName, password);
-		EmailMessage message = new EmailMessage();
+		SMTPMessage message = new SMTPMessage();
 		message.setFrom(fromName, fromAddr);
 		message.setSubject("測試中");
 		message.setContent("中文測試, akfsld;jkafjka;fdsjkaf", "text/html; charset=utf-8");
