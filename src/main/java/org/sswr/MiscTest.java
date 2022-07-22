@@ -51,6 +51,7 @@ import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.io.FileUtil;
+import org.sswr.util.io.MODBUSTCPMaster;
 import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.PrintStreamWriter;
@@ -58,6 +59,7 @@ import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
 import org.sswr.util.io.SystemInfoUtil;
 import org.sswr.util.io.ZipUtil;
+import org.sswr.util.io.device.ED538;
 import org.sswr.util.media.PrintDocument;
 import org.sswr.util.media.Printer;
 import org.sswr.util.net.ASN1OIDInfo;
@@ -66,6 +68,8 @@ import org.sswr.util.net.DNSRequestAnswer;
 import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.SocketFactory;
+import org.sswr.util.net.TCPClient;
+import org.sswr.util.net.TCPClientType;
 import org.sswr.util.net.email.SMTPMessage;
 import org.sswr.util.net.email.EmailUtil;
 import org.sswr.util.net.email.IMAPEmailReader;
@@ -652,6 +656,24 @@ public class MiscTest
 		else
 		{
 			System.out.println("isSingleCertWithKey = " + CertUtil.isKeyStoreSingleCertWithKey(ks, password));
+		}
+	}
+
+	public static void ed538Test()
+	{
+		String host = "192.168.1.150";
+		int port = 3456;
+		byte addr = 1;
+		int index = 1;
+		TCPClient cli = new TCPClient(host, port, TCPClientType.PLAIN);
+		if (!cli.isConnectError())
+		{
+			MODBUSTCPMaster modbus = new MODBUSTCPMaster(cli);
+			ED538 dev = new ED538(modbus, addr);
+			dev.isRelayHigh(index);
+			dev.setRelayState(index, true);
+			cli.isRecvDown();
+			dev.close();
 		}
 	}
 
