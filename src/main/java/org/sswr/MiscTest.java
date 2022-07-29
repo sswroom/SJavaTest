@@ -661,25 +661,30 @@ public class MiscTest
 
 	public static void ed538Test()
 	{
-		String host = "192.168.1.150";
-		int port = 3456;
-		byte addr = 1;
-		int index = 1;
+		String host = "192.168.1.38";
+		int port = 502;
+		byte addr = 0;
+		int index = 2;
 		TCPClient cli = new TCPClient(host, port, TCPClientType.PLAIN);
 		if (!cli.isConnectError())
 		{
 			MODBUSTCPMaster modbus = new MODBUSTCPMaster(cli);
 			ED538 dev = new ED538(modbus, addr);
-			dev.isRelayHigh(index);
-			dev.setRelayState(index, true);
-			cli.isRecvDown();
+			System.out.println("Relay status = "+dev.isRelayHigh(index));;
+			System.out.println("Relay change = "+dev.setRelayState(index, true));
+			System.out.println("Relay status = "+dev.isRelayHigh(index));
+			System.out.println("Is recv down = "+cli.isRecvDown());
 			dev.close();
+		}
+		else
+		{
+			System.out.println("Error in connecting to ED538");
 		}
 	}
 
 	public static void main(String args[]) throws Exception
 	{
-		int type = 30;
+		int type = 31;
 		switch (type)
 		{
 		case 0:
@@ -774,6 +779,9 @@ public class MiscTest
 			break;
 		case 30:
 			keyStoreTest();
+			break;
+		case 31:
+			ed538Test();
 			break;
 		}	
 	}
