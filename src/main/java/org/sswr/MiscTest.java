@@ -11,7 +11,9 @@ import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509CRL;
+import java.sql.Timestamp;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -682,9 +684,20 @@ public class MiscTest
 		}
 	}
 
+	public static void timeTest()
+	{
+		Timestamp ts = DateTimeUtil.timestampNow();
+		Timestamp ts2 = new Timestamp(System.currentTimeMillis());
+		ZonedDateTime zdt = ZonedDateTime.now();
+		System.out.println(DateTimeUtil.toString(ts, "yyyy-MM-dd HH:mm:ss.fffffffff"));
+		System.out.println(DateTimeUtil.toString(ts2, "yyyy-MM-dd HH:mm:ss.fffffffff"));
+		System.out.println(DateTimeUtil.toString(zdt, "yyyy-MM-dd HH:mm:ss.fffffffff"));
+		System.out.println(ts.getTime() + " "+ts.getNanos());
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 31;
+		int type = 32;
 		switch (type)
 		{
 		case 0:
@@ -782,6 +795,9 @@ public class MiscTest
 			break;
 		case 31:
 			ed538Test();
+			break;
+		case 32:
+			timeTest();
 			break;
 		}	
 	}
