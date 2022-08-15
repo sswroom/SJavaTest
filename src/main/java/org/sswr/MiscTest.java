@@ -11,9 +11,11 @@ import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509CRL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.zip.ZipException;
@@ -42,6 +45,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.sswr.model.TestTable;
 import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.CertUtil;
 import org.sswr.util.crypto.IntKeyHandler;
@@ -52,7 +56,10 @@ import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
+import org.sswr.util.db.DBUtil;
 import org.sswr.util.io.FileUtil;
+import org.sswr.util.io.LogLevel;
+import org.sswr.util.io.LogTool;
 import org.sswr.util.io.MODBUSTCPMaster;
 import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
@@ -695,9 +702,28 @@ public class MiscTest
 		System.out.println(ts.getTime() + " "+ts.getNanos());
 	}
 
+	public static void postgresqlTest()
+	{
+		LogTool logTool = new LogTool();
+		logTool.addPrintLog(System.out, LogLevel.RAW);
+		DBUtil.setSqlLogger(logTool);
+		String url = "jdbc:postgresql://localhost:5432/test";
+		try
+		{
+			Connection conn = DriverManager.getConnection(url, "postgres", "postgres");
+			System.out.println("Conn Type = "+DBUtil.connGetDBType(conn));
+			Map<Integer, TestTable> data = DBUtil.loadItems(TestTable.class, conn, null, null);
+			System.out.println("Data: "+DataTools.toObjectString(data));
+		}
+		catch (SQLException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 32;
+		int type = 33;
 		switch (type)
 		{
 		case 0:
@@ -799,6 +825,9 @@ public class MiscTest
 		case 32:
 			timeTest();
 			break;
-		}	
+		case 33:
+			postgresqlTest();
+			break;
+		}
 	}
 }
