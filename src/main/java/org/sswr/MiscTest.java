@@ -721,9 +721,15 @@ public class MiscTest
 		}
 	}
 
+	public static void deleteFileTest()
+	{
+		String path = "/home/sswroom/Progs/Temp/testdelete";
+		System.out.println("delete = "+FileUtil.deleteFileOrDir(path));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 33;
+		int type = 34;
 		switch (type)
 		{
 		case 0:
@@ -827,6 +833,9 @@ public class MiscTest
 			break;
 		case 33:
 			postgresqlTest();
+			break;
+		case 34:
+			deleteFileTest();
 			break;
 		}
 	}
