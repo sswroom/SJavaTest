@@ -653,9 +653,7 @@ public class MiscTest
 
 	public static void keyStoreTest()
 	{
-//		String fileName = "/etc/ssl/certs/java/cacerts";
-//		String password = "changeit";
-		String fileName = "/home/sswroom/Progs/Stoneroad/keys/vams/saml_token.jks";
+		String fileName = "/etc/ssl/certs/java/cacerts";
 		String password = "changeit";
 		KeyStore ks = CertUtil.loadKeyStore(fileName, password);
 		if (ks == null)
@@ -727,9 +725,24 @@ public class MiscTest
 		System.out.println("delete = "+FileUtil.deleteFileOrDir(path));
 	}
 
+	public static void keyStoreErrorTest()
+	{
+		String fileName = "/home/sswroom/Progs/Temp/certerror.csv";
+		String password = "changeit";
+		KeyStore ks = CertUtil.loadKeyStore(fileName, password);
+		if (ks == null)
+		{
+			System.out.println("Error in loading KeyStore");
+			System.out.println("Deleting the file = "+FileUtil.deleteFileOrDir(fileName));
+		}
+		else
+		{
+			System.out.println("isSingleCertWithKey = " + CertUtil.isKeyStoreSingleCertWithKey(ks, password));
+		}
+	}
 	public static void main(String args[]) throws Exception
 	{
-		int type = 34;
+		int type = 35;
 		switch (type)
 		{
 		case 0:
@@ -836,6 +849,9 @@ public class MiscTest
 			break;
 		case 34:
 			deleteFileTest();
+			break;
+		case 35:
+			keyStoreErrorTest();
 			break;
 		}
 	}
