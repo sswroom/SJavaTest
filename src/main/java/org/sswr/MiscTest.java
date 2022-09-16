@@ -76,6 +76,7 @@ import org.sswr.util.net.DNSClient;
 import org.sswr.util.net.DNSRequestAnswer;
 import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
+import org.sswr.util.net.RequestMethod;
 import org.sswr.util.net.SocketFactory;
 import org.sswr.util.net.TCPClient;
 import org.sswr.util.net.TCPClientType;
@@ -387,7 +388,7 @@ public class MiscTest
 
 	public static void jsonWebTest() throws IOException
 	{
-		HTTPMyClient cli = new HTTPMyClient("https://www.1823.gov.hk/common/ical/en.json", "GET");
+		HTTPMyClient cli = new HTTPMyClient("https://www.1823.gov.hk/common/ical/en.json", RequestMethod.HTTP_GET);
 		byte[] buff = cli.readToEnd();
 		System.out.println(buff.length);
 		String jsonStr = new String(buff, StandardCharsets.UTF_8);
