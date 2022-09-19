@@ -9,7 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
 import java.security.cert.X509CRL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -57,6 +59,7 @@ import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.db.DBUtil;
+import org.sswr.util.exporter.PEMExporter;
 import org.sswr.util.io.FileUtil;
 import org.sswr.util.io.LogLevel;
 import org.sswr.util.io.LogTool;
@@ -741,9 +744,24 @@ public class MiscTest
 			System.out.println("isSingleCertWithKey = " + CertUtil.isKeyStoreSingleCertWithKey(ks, password));
 		}
 	}
+
+	public static void certExportTest()
+	{
+		KeyStore ks = CertUtil.loadDefaultTrustStore();
+		try
+		{
+			Certificate cert = ks.getCertificate(ks.aliases().nextElement());
+			PEMExporter.exportFile("/home/sswroom/Progs/Temp/exporttest.crt", CertUtil.toMyCert(cert));
+		}
+		catch (KeyStoreException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 35;
+		int type = 36;
 		switch (type)
 		{
 		case 0:
@@ -853,6 +871,9 @@ public class MiscTest
 			break;
 		case 35:
 			keyStoreErrorTest();
+			break;
+		case 36:
+			certExportTest();
 			break;
 		}
 	}
