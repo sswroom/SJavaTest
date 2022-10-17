@@ -2,6 +2,7 @@ package org.sswr;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -46,6 +47,10 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.hwpf.HWPFDocument;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.sswr.model.TestTable;
 import org.sswr.util.crypto.Bcrypt;
@@ -53,6 +58,7 @@ import org.sswr.util.crypto.CertUtil;
 import org.sswr.util.crypto.IntKeyHandler;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
+import org.sswr.util.data.GeometryUtil;
 import org.sswr.util.data.JSONParser;
 import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
@@ -72,6 +78,7 @@ import org.sswr.util.io.StreamUtil;
 import org.sswr.util.io.SystemInfoUtil;
 import org.sswr.util.io.ZipUtil;
 import org.sswr.util.io.device.ED538;
+import org.sswr.util.math.unit.Distance.DistanceUnit;
 import org.sswr.util.media.PrintDocument;
 import org.sswr.util.media.Printer;
 import org.sswr.util.net.ASN1OIDInfo;
@@ -92,6 +99,12 @@ import org.sswr.util.net.email.SMTPClient;
 import org.sswr.util.net.email.SMTPConnType;
 import org.sswr.util.office.DocUtil;
 import org.sswr.util.office.PDFUtil;
+
+import com.itextpdf.text.pdf.PRStream;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfObject;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStream;
 
 public class MiscTest
 {
@@ -454,7 +467,7 @@ public class MiscTest
 	{
 		String data = "ADMS,,,";
 		int i = 10000000;
-		String[] ret = null;
+		String[] ret = {};
 		int j = 0;
 		long t = System.currentTimeMillis();
 		while (i-- > 0)
@@ -759,9 +772,55 @@ public class MiscTest
 		}
 	}
 
+	public static void geomDistTest()
+	{
+		PrecisionModel pm = new PrecisionModel();
+		GeometryFactory gf = new GeometryFactory(pm, 2326);
+		Coordinate coords[] = new Coordinate[4];
+		coords[0] = new Coordinate(0, 0);
+		coords[1] = new Coordinate(1, 0);
+		coords[2] = new Coordinate(0.5, Math.sin(60 * Math.PI / 180));
+		coords[3] = new Coordinate(0, 0);
+		Polygon pg = gf.createPolygon(coords);
+		System.out.println("Distance = "+GeometryUtil.calcMaxDistanceFromCenter(pg, DistanceUnit.Meter)+", Centroid = "+pg.getCentroid().toString());
+	}
+
+	public static void pdfExtractTest()
+	{
+		String pdfFile = "/home/sswroom/Progs/Temp/20221012 PDF Resize/pdf_files/81222.pdf";
+		try
+		{
+			PdfReader reader = new PdfReader(pdfFile);
+			int nObj = reader.getXrefSize();
+			int i = 0;
+			while (i < nObj)
+			{
+				PdfObject pdfobj = reader.getPdfObject(i);
+				if (pdfobj != null && pdfobj instanceof PdfStream)
+				{
+					PdfStream stm = (PdfStream)pdfobj;
+					PdfObject pdfsubtype = stm.get(PdfName.SUBTYPE);
+					if (pdfsubtype != null && pdfsubtype.toString().equals(PdfName.IMAGE.toString()))
+					{
+						byte[] img = PdfReader.getStreamBytesRaw((PRStream) stm);
+						FileOutputStream out = new FileOutputStream(new File(pdfFile +"."+ i + ".jpg"));
+						out.write(img);
+						out.flush();
+						out.close();
+					}
+				}
+				i++;
+			}
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 36;
+		int type = 38;
 		switch (type)
 		{
 		case 0:
@@ -874,6 +933,12 @@ public class MiscTest
 			break;
 		case 36:
 			certExportTest();
+			break;
+		case 37:
+			geomDistTest();
+			break;
+		case 38:
+			pdfExtractTest();
 			break;
 		}
 	}
