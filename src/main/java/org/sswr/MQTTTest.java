@@ -121,9 +121,7 @@ public class MQTTTest implements MQTTEventHdlr
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1884, TCPClientType.PLAIN, 30, "ro", "readonly", true);
 //		System.setProperty("javax.net.ssl.trustStore","keystore.jks");
 //		System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-		configSSL("/home/sswroom/Progs/Stoneroad_GIT/mtrc_erfl_backend/src/main/resources/keystore/mqtt_srv.crt");
-//		cli = new MQTTStaticClient("test.mosquitto.org", 8883, TCPClientType.SSL, 30, null, null, true);
-		cli = new MQTTStaticClient("gis2.ectrak.com.hk", 8901, TCPClientType.SSL, 30, "RFL_SPRING2", "RFL_SPRING2", true);
+		cli = new MQTTStaticClient("test.mosquitto.org", 8883, TCPClientType.SSL, 30, null, null, true);
 		if (cli.getConnError() == ConnError.CONNECTED)
 		{
 			cli.handleEvents(new MQTTTest());
