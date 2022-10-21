@@ -78,7 +78,10 @@ import org.sswr.util.io.StreamUtil;
 import org.sswr.util.io.SystemInfoUtil;
 import org.sswr.util.io.ZipUtil;
 import org.sswr.util.io.device.ED538;
+import org.sswr.util.math.Coord2DDbl;
+import org.sswr.util.math.RectAreaDbl;
 import org.sswr.util.math.unit.Distance.DistanceUnit;
+import org.sswr.util.media.PageSplitter;
 import org.sswr.util.media.PrintDocument;
 import org.sswr.util.media.Printer;
 import org.sswr.util.net.ASN1OIDInfo;
@@ -818,9 +821,16 @@ public class MiscTest
 		}
 	}
 
+	public static void pageSplitterTest()
+	{
+		PageSplitter splitter = new PageSplitter();
+		RectAreaDbl area = new RectAreaDbl(new Coord2DDbl(100, 100), new Coord2DDbl(1000, 500));
+		System.out.println(DataTools.toObjectString(splitter.splitDrawings(area, 30, 10, 1000)));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 38;
+		int type = 39;
 		switch (type)
 		{
 		case 0:
@@ -939,6 +949,9 @@ public class MiscTest
 			break;
 		case 38:
 			pdfExtractTest();
+			break;
+		case 39:
+			pageSplitterTest();
 			break;
 		}
 	}
