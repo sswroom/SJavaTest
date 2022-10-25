@@ -66,6 +66,7 @@ import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.db.DBUtil;
 import org.sswr.util.exporter.PEMExporter;
+import org.sswr.util.io.FileStream;
 import org.sswr.util.io.FileUtil;
 import org.sswr.util.io.LogLevel;
 import org.sswr.util.io.LogTool;
@@ -77,6 +78,9 @@ import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
 import org.sswr.util.io.SystemInfoUtil;
 import org.sswr.util.io.ZipUtil;
+import org.sswr.util.io.FileStream.BufferType;
+import org.sswr.util.io.FileStream.FileMode;
+import org.sswr.util.io.FileStream.FileShare;
 import org.sswr.util.io.device.ED538;
 import org.sswr.util.math.Coord2DDbl;
 import org.sswr.util.math.RectAreaDbl;
@@ -94,12 +98,14 @@ import org.sswr.util.net.SocketFactory;
 import org.sswr.util.net.TCPClient;
 import org.sswr.util.net.TCPClientType;
 import org.sswr.util.net.email.SMTPMessage;
+import org.sswr.util.net.email.EmailMessage;
 import org.sswr.util.net.email.EmailUtil;
 import org.sswr.util.net.email.IMAPEmailReader;
 import org.sswr.util.net.email.POP3EmailReader;
 import org.sswr.util.net.email.ReceivedEmail;
 import org.sswr.util.net.email.SMTPClient;
 import org.sswr.util.net.email.SMTPConnType;
+import org.sswr.util.net.email.SMTPEmailControl;
 import org.sswr.util.office.DocUtil;
 import org.sswr.util.office.PDFUtil;
 
@@ -828,9 +834,58 @@ public class MiscTest
 		System.out.println(DataTools.toObjectString(splitter.splitDrawings(area, 30, 10, 1000)));
 	}
 
+	public static void fileTimeTest()
+	{
+		FileStream fs = new FileStream("/home/sswroom/Progs/Temp/photo2.jpg", FileMode.ReadOnly, FileShare.DenyNone, BufferType.Normal);
+		System.out.println("Create Time: "+fs.getCreateTime());
+		System.out.println("Modify Time: "+fs.getModifyTime());
+		fs.close();
+	}
+
+	public static void smtpDirectControlTest()
+	{
+		LogTool logger = new LogTool();
+		logger.addPrintLog(System.out, LogLevel.RAW);
+//		SMTPDirectEmailControl ctrl = new SMTPDirectEmailControl("127.0.0.1", null, SMTPConnType.PLAIN, "test", "test", "sswroom@yahoo.com", logger);
+		SMTPEmailControl ctrl = new SMTPEmailControl("127.0.0.1", null, false, "test", "test", "sswroom@yahoo.com", logger);
+		EmailMessage msg = new EmailMessage()
+		{
+			public String getContent()
+			{
+				return "Testing";
+			}
+
+			public String getSubject()
+			{
+				return "Test subject";
+			}
+
+			public void addAttachment(String attachmentPath)
+			{
+			}
+
+			public int getAttachmentCount()
+			{
+				return 1;
+			}
+
+			public String getAttachment(int index)
+			{
+				if (index == 0)
+				{
+					return "/home/sswroom/Progs/Temp/OCR1.jpg";
+				}
+				return null;
+			}
+		};
+
+		ctrl.sendMail(msg, "sswroom@yahoo.com", null);
+		System.exit(0);
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 39;
+		int type = 41;
 		switch (type)
 		{
 		case 0:
@@ -952,6 +1007,12 @@ public class MiscTest
 			break;
 		case 39:
 			pageSplitterTest();
+			break;
+		case 40:
+			fileTimeTest();
+			break;
+		case 41:
+			smtpDirectControlTest();
 			break;
 		}
 	}
