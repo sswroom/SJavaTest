@@ -82,7 +82,7 @@ public class XlsxTest
 			rowNum = 0;
 			while (rowNum < testRowCnt)
 			{
-				ts = DateTimeUtil.addDay(new Timestamp(System.currentTimeMillis()), rowNum - testRowCnt);
+				ts = DateTimeUtil.addDay(DateTimeUtil.timestampNow(), rowNum - testRowCnt);
 				rowNum++;
 				row = XlsxUtil.getRow(dataSheet, rowNum);
 				XlsxUtil.setCell(row, 0, dateStyle, ts);
