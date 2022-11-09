@@ -109,6 +109,10 @@ import org.sswr.util.net.email.SMTPEmailControl;
 import org.sswr.util.office.DocUtil;
 import org.sswr.util.office.PDFUtil;
 
+import com.itextpdf.kernel.pdf.EncryptionConstants;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.WriterProperties;
 import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfObject;
@@ -883,9 +887,30 @@ public class MiscTest
 		System.exit(0);
 	}
 
+	public static void pdfEncTest()
+	{
+		String srcFile = "/home/sswroom/Progs/Temp/testPDF.pdf";
+		String destFile = "/home/sswroom/Progs/Temp/testEncPDF.pdf";
+		String userPWd = "user";
+		String ownerPwd = "owner";
+		try
+		{
+			com.itextpdf.kernel.pdf.PdfReader pdfReader = new com.itextpdf.kernel.pdf.PdfReader(srcFile);
+			WriterProperties writerProperties = new WriterProperties();
+			writerProperties.setStandardEncryption(null, ownerPwd.getBytes(), EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.ENCRYPTION_AES_128);
+			PdfWriter pdfWriter = new PdfWriter(new FileOutputStream(destFile), writerProperties);
+			PdfDocument pdfDocument = new PdfDocument(pdfReader, pdfWriter);
+			pdfDocument.close();
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 41;
+		int type = 42;
 		switch (type)
 		{
 		case 0:
@@ -1013,6 +1038,9 @@ public class MiscTest
 			break;
 		case 41:
 			smtpDirectControlTest();
+			break;
+		case 42:
+			pdfEncTest();
 			break;
 		}
 	}
