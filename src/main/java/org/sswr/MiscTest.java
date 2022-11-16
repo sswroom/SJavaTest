@@ -897,7 +897,7 @@ public class MiscTest
 		{
 			com.itextpdf.kernel.pdf.PdfReader pdfReader = new com.itextpdf.kernel.pdf.PdfReader(srcFile);
 			WriterProperties writerProperties = new WriterProperties();
-			writerProperties.setStandardEncryption(null, ownerPwd.getBytes(), EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.ENCRYPTION_AES_128);
+			writerProperties.setStandardEncryption(userPWd.getBytes(), ownerPwd.getBytes(), EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.ENCRYPTION_AES_128);
 			PdfWriter pdfWriter = new PdfWriter(new FileOutputStream(destFile), writerProperties);
 			PdfDocument pdfDocument = new PdfDocument(pdfReader, pdfWriter);
 			pdfDocument.close();
@@ -908,9 +908,21 @@ public class MiscTest
 		}
 	}
 
+	public static void fileCopyTest()
+	{
+		if (FileUtil.copyDir(new File("/home/sswroom/Progs/Temp/kmlTest"), "/home/sswroom/Progs/Temp/kmlTestCopy", true))
+		{
+			System.out.println("Copied");
+		}
+		else
+		{
+			System.out.println("Error in copying");
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 42;
+		int type = 43;
 		switch (type)
 		{
 		case 0:
@@ -1041,6 +1053,9 @@ public class MiscTest
 			break;
 		case 42:
 			pdfEncTest();
+			break;
+		case 43:
+			fileCopyTest();
 			break;
 		}
 	}
