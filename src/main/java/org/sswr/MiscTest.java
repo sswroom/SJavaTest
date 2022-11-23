@@ -1,8 +1,10 @@
 package org.sswr;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -19,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -64,6 +67,7 @@ import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
+import org.sswr.util.db.CSVUtil;
 import org.sswr.util.db.DBUtil;
 import org.sswr.util.exporter.PEMExporter;
 import org.sswr.util.io.FileStream;
@@ -77,6 +81,7 @@ import org.sswr.util.io.PrintStreamWriter;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
 import org.sswr.util.io.SystemInfoUtil;
+import org.sswr.util.io.VersionUtil;
 import org.sswr.util.io.ZipUtil;
 import org.sswr.util.io.FileStream.BufferType;
 import org.sswr.util.io.FileStream.FileMode;
@@ -920,9 +925,34 @@ public class MiscTest
 		}
 	}
 
+	public static void csvFileTest()
+	{
+		String fileName = "/home/sswroom/Progs/Temp/20221116 CAD/dataProcessed/adsb_movement_statistic/ADSB_Movement_Statistic_201904.csv";
+		try
+		{
+			Instant startTime = Instant.now();
+			BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			while (CSVUtil.readLine(reader) != null)
+			{
+				
+			}
+			reader.close();
+			System.out.println("Time used: "+DateTimeUtil.timeDiffSec(Instant.now(), startTime));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public static void verTest()
+	{
+		System.out.println("Version = "+VersionUtil.getFileVersion(MiscTest.class));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 43;
+		int type = 45;
 		switch (type)
 		{
 		case 0:
@@ -1056,6 +1086,12 @@ public class MiscTest
 			break;
 		case 43:
 			fileCopyTest();
+			break;
+		case 44:
+			csvFileTest();
+			break;
+		case 45:
+			verTest();
 			break;
 		}
 	}
