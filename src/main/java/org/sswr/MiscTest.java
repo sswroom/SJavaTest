@@ -63,6 +63,7 @@ import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
 import org.sswr.util.data.GeometryUtil;
 import org.sswr.util.data.JSONParser;
+import org.sswr.util.data.SharedDouble;
 import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
@@ -950,9 +951,23 @@ public class MiscTest
 		System.out.println("Version = "+VersionUtil.getFileVersion(MiscTest.class));
 	}
 
+	public static void angle3dTest()
+	{
+		SharedDouble hAngle = new SharedDouble();
+		SharedDouble vAngle = new SharedDouble();
+		GeometryUtil.calcHVAngleDeg(new Coord2DDbl(114, 24), new Coord2DDbl(114, 24.1), 0, 10, hAngle, vAngle);
+		System.out.println("HAngle = "+hAngle.value +", VAngle = "+vAngle.value);
+		GeometryUtil.calcHVAngleDeg(new Coord2DDbl(114, 24), new Coord2DDbl(114.1, 24), 0, 20, hAngle, vAngle);
+		System.out.println("HAngle = "+hAngle.value +", VAngle = "+vAngle.value);
+		GeometryUtil.calcHVAngleDeg(new Coord2DDbl(114, 24), new Coord2DDbl(114, 23.9), 0, -10, hAngle, vAngle);
+		System.out.println("HAngle = "+hAngle.value +", VAngle = "+vAngle.value);
+		GeometryUtil.calcHVAngleDeg(new Coord2DDbl(114, 24), new Coord2DDbl(113.9, 24), 0, -20, hAngle, vAngle);
+		System.out.println("HAngle = "+hAngle.value +", VAngle = "+vAngle.value);
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 45;
+		int type = 46;
 		switch (type)
 		{
 		case 0:
@@ -1092,6 +1107,9 @@ public class MiscTest
 			break;
 		case 45:
 			verTest();
+			break;
+		case 46:
+			angle3dTest();
 			break;
 		}
 	}
