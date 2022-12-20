@@ -90,6 +90,8 @@ import org.sswr.util.io.FileStream.FileShare;
 import org.sswr.util.io.device.ED538;
 import org.sswr.util.math.Coord2DDbl;
 import org.sswr.util.math.RectAreaDbl;
+import org.sswr.util.math.WKTReader;
+import org.sswr.util.math.geometry.LineString;
 import org.sswr.util.math.unit.Distance.DistanceUnit;
 import org.sswr.util.media.PageSplitter;
 import org.sswr.util.media.PrintDocument;
@@ -965,9 +967,27 @@ public class MiscTest
 		System.out.println("HAngle = "+hAngle.value +", VAngle = "+vAngle.value);
 	}
 
+	public static void wktReaderTest()
+	{
+		String wkt = "LINESTRING (12643904.589899998 2536653.7993, 12678884.532000002 2548834.3268)";
+		WKTReader reader = new WKTReader(3857);
+		LineString pl = (LineString)reader.parseWKT(wkt.getBytes());
+		System.out.println("pl = "+pl);
+	}
+
+	public static void toVector2DTest()
+	{
+		Coordinate coords[] = new Coordinate[2];
+		coords[0] = new Coordinate(114, 24);
+		coords[1] = new Coordinate(114.1, 24.1);
+		GeometryFactory factory = new GeometryFactory();
+		org.locationtech.jts.geom.LineString ls1 = factory.createLineString(coords);
+		System.out.println("LineString = "+GeometryUtil.toVector2D(ls1, false, false));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 46;
+		int type = 48;
 		switch (type)
 		{
 		case 0:
@@ -1110,6 +1130,12 @@ public class MiscTest
 			break;
 		case 46:
 			angle3dTest();
+			break;
+		case 47:
+			wktReaderTest();
+			break;
+		case 48:
+			toVector2DTest();
 			break;
 		}
 	}
