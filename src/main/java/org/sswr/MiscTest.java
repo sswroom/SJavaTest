@@ -982,7 +982,7 @@ public class MiscTest
 		coords[1] = new Coordinate(114.1, 24.1);
 		GeometryFactory factory = new GeometryFactory();
 		org.locationtech.jts.geom.LineString ls1 = factory.createLineString(coords);
-		System.out.println("LineString = "+GeometryUtil.toVector2D(ls1, false, false));
+		System.out.println("LineString = "+GeometryUtil.toVector2D(ls1));
 	}
 
 	public static void main(String args[]) throws Exception
