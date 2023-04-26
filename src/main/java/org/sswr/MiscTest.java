@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -52,6 +53,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -604,7 +606,7 @@ public class MiscTest
 
 	public static void crlTest()
 	{
-		X509CRL crl = CertUtil.loadCRL("/home/sswroom/Progs/Temp/20220615 EMPC CRL/eCertCA1-10CRL1.crl");
+		X509CRL crl = CertUtil.loadCRL("/home/sswroom/Progs/Temp/20230327 CRL Test/eCertCA2-15CRL1.crl");
 		
 		System.out.println("isValid = " + CertUtil.isValid(crl));
 	}
@@ -985,9 +987,86 @@ public class MiscTest
 		System.out.println("LineString = "+GeometryUtil.toVector2D(ls1));
 	}
 
+	public static void contTypeTest()
+	{
+		System.out.println(URLConnection.guessContentTypeFromName("Test.doc"));
+	}
+
+	public static MultiLineString parsePLL(String file)
+	{
+		try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			CSVUtil.readLine(reader);
+			String[] cols;
+			GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 2326);
+			int i;
+			int j;
+			List<org.locationtech.jts.geom.LineString> lsList = new ArrayList<org.locationtech.jts.geom.LineString>();
+			while ((cols = CSVUtil.readLine(reader)) != null)
+			{
+				i = 1;
+				j = cols.length;
+				Coordinate[] coords = new Coordinate[j - 1];
+				while (i < j)
+				{
+					if (!cols[i].startsWith("(") || !cols[i].endsWith(")"))
+					{
+						reader.close();
+						System.out.println("Format error 1: "+cols[i]);
+						return null;
+					}
+					String pt[] = StringUtil.split(cols[i].substring(1, cols[i].length() - 1), ",");
+					if (pt.length != 2)
+					{
+						reader.close();
+						System.out.println("Format error 2: "+cols[i]);
+						return null;
+					}
+					Double x = StringUtil.toDouble(pt[0]);
+					Double y = StringUtil.toDouble(pt[1]);
+					if (x == null || y == null)
+					{
+						reader.close();
+						System.out.println("Format error 3: "+cols[i]);
+						return null;
+					}
+					coords[i - 1] = new Coordinate(x, y);
+					i++;
+				}
+				lsList.add(gf.createLineString(coords));
+			}
+			reader.close();
+			org.locationtech.jts.geom.LineString[] lsArray = new org.locationtech.jts.geom.LineString[lsList.size()];
+			i = lsList.size();
+			while (i-- > 0)
+			{
+				lsArray[i] = lsList.get(i);
+			}
+			return gf.createMultiLineString(lsArray);
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public static void pllParseTest()
+	{
+		String file = "/home/sswroom/Progs/Temp/20230317 PLL Insert SQLServer error/EMPf5624.PLL";
+		System.out.println(parsePLL(file).toString());
+	}
+
+	public static void emailValidTest()
+	{
+		String email = "sswroom@yahoo.com";
+		System.out.println("Is email address = "+StringUtil.isEmailAddress(email));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 48;
+		int type = 51;
 		switch (type)
 		{
 		case 0:
@@ -1136,6 +1215,15 @@ public class MiscTest
 			break;
 		case 48:
 			toVector2DTest();
+			break;
+		case 49:
+			contTypeTest();
+			break;
+		case 50:
+			pllParseTest();
+			break;
+		case 51:
+			emailValidTest();
 			break;
 		}
 	}
