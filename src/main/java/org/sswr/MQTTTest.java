@@ -147,7 +147,7 @@ public class MQTTTest implements MQTTEventHdlr
 
 	public static void main(String args[]) throws Exception
 	{
-		int testType = 3;
+		int testType = 0;
 		switch (testType)
 		{
 		case 0:

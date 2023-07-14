@@ -1064,9 +1064,14 @@ public class MiscTest
 		System.out.println("Is email address = "+StringUtil.isEmailAddress(email));
 	}
 
+	public static void dateTimeToString()
+	{
+		System.out.println(DateTimeUtil.toString(DateTimeUtil.timestampNow(), "yyyy-MM-dd'T'HH:mm:ss.fffffffffzzzz"));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 51;
+		int type = 52;
 		switch (type)
 		{
 		case 0:
@@ -1224,6 +1229,9 @@ public class MiscTest
 			break;
 		case 51:
 			emailValidTest();
+			break;
+		case 52:
+			dateTimeToString();
 			break;
 		}
 	}
