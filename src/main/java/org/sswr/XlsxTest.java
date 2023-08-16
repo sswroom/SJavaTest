@@ -35,11 +35,18 @@ public class XlsxTest
 {
 	private static void test0() throws IOException
 	{
-		String fileName = FileUtil.getRealPath("~/Progs/Temp/Test.xlsx");
-		XlsxValidator xlsx = new XlsxValidator(new FileInputStream(fileName), new String[]{"ColA", "ColB", "ColC", "ColD", "ColE"});
-		while (xlsx.nextRow())
+		String fileName = FileUtil.getRealPath("~/Progs/Temp/Test.xls");
+		XlsxValidator xlsx = new XlsxValidator(new FileInputStream(fileName), new String[]{"ColA", "ColB", "ColC", "ColD", "ColE"}, 0, true);
+		if (xlsx.isFileValid())
 		{
-			System.out.println(DataTools.toObjectString(xlsx.getRowAsMap()));
+			while (xlsx.nextRow())
+			{
+				System.out.println(DataTools.toObjectString(xlsx.getRowAsMap()));
+			}
+		}
+		else
+		{
+			System.out.println("Error: "+xlsx.getLastError());
 		}
 		xlsx.close();
 	}
@@ -109,7 +116,7 @@ public class XlsxTest
 
 	public static void main(String []args) throws IOException
 	{
-		int testId = 1;
+		int testId = 0;
 		switch (testId)
 		{
 		case 0:
