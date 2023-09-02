@@ -61,6 +61,7 @@ import org.sswr.model.TestTable;
 import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.CertUtil;
 import org.sswr.util.crypto.IntKeyHandler;
+import org.sswr.util.crypto.MyX509Key;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
 import org.sswr.util.data.GeometryUtil;
@@ -99,11 +100,13 @@ import org.sswr.util.media.PageSplitter;
 import org.sswr.util.media.PrintDocument;
 import org.sswr.util.media.Printer;
 import org.sswr.util.net.ASN1OIDInfo;
+import org.sswr.util.net.AzureManager;
 import org.sswr.util.net.DNSClient;
 import org.sswr.util.net.DNSRequestAnswer;
 import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.RequestMethod;
+import org.sswr.util.net.SSLEngine;
 import org.sswr.util.net.SocketFactory;
 import org.sswr.util.net.TCPClient;
 import org.sswr.util.net.TCPClientType;
@@ -1069,9 +1072,27 @@ public class MiscTest
 		System.out.println(DateTimeUtil.toString(DateTimeUtil.timestampNow(), "yyyy-MM-dd'T'HH:mm:ss.fffffffffzzzz"));
 	}
 
+	public static void azureTest()
+	{
+		SocketFactory sockf = SocketFactory.create();
+		SSLEngine ssl = new SSLEngine();
+		AzureManager azure = new AzureManager(sockf, ssl);
+		MyX509Key key = azure.createKey("-KI3Q9nNR7bRofxmeZoXqbHZGew");
+		if (key == null)
+		{
+			System.out.println("Key not found");
+		}
+		else
+		{
+			StringBuilder sb = new StringBuilder();
+			key.toASN1String(sb);
+			System.out.println(sb.toString());
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 52;
+		int type = 53;
 		switch (type)
 		{
 		case 0:
@@ -1232,6 +1253,9 @@ public class MiscTest
 			break;
 		case 52:
 			dateTimeToString();
+			break;
+		case 53:
+			azureTest();
 			break;
 		}
 	}
