@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>io.github.sswroom</groupId>
 			<artifactId>util-deps</artifactId>
-			<version>0.1</version>
+			<version>[0.1,)</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.ucanaccess</groupId>
