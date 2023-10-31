@@ -512,17 +512,18 @@ public class MiscTest
 		System.out.println("DNS List: "+DataTools.toObjectString(sockf.getDefDNS()));
 	}
 
-	public static void smtpClientTest()
+	public static void smtpClientTest() throws Exception
 	{
 		String host = "";
 		int port = 465;
 		SMTPConnType connType = SMTPConnType.STARTTLS;
+		SSLEngine ssl = new SSLEngine(false);
 		String userName = "";
 		String password = "";
 		String fromName = "";
 		String fromAddr = "";
 		String toAddr = "";
-		SMTPClient smtp = new SMTPClient(host, port, connType, new PrintStreamWriter(System.out));
+		SMTPClient smtp = new SMTPClient(host, port, ssl, connType, new PrintStreamWriter(System.out));
 		smtp.setPlainAuth(userName, password);
 		SMTPMessage message = new SMTPMessage();
 		message.setFrom(fromName, fromAddr);
@@ -715,7 +716,7 @@ public class MiscTest
 		int port = 502;
 		byte addr = 0;
 		int index = 2;
-		TCPClient cli = new TCPClient(host, port, TCPClientType.PLAIN);
+		TCPClient cli = new TCPClient(host, port, null, TCPClientType.PLAIN);
 		if (!cli.isConnectError())
 		{
 			MODBUSTCPMaster modbus = new MODBUSTCPMaster(cli);
@@ -1072,10 +1073,10 @@ public class MiscTest
 		System.out.println(DateTimeUtil.toString(DateTimeUtil.timestampNow(), "yyyy-MM-dd'T'HH:mm:ss.fffffffffzzzz"));
 	}
 
-	public static void azureTest()
+	public static void azureTest() throws Exception
 	{
 		SocketFactory sockf = SocketFactory.create();
-		SSLEngine ssl = new SSLEngine();
+		SSLEngine ssl = new SSLEngine(false);
 		AzureManager azure = new AzureManager(sockf, ssl);
 		MyX509Key key = azure.createKey("-KI3Q9nNR7bRofxmeZoXqbHZGew");
 		if (key == null)
@@ -1090,9 +1091,21 @@ public class MiscTest
 		}
 	}
 
+	public static void httpFilePostTest() throws Exception
+	{
+//		HTTPMyClient cli = new HTTPMyClient("http://127.0.0.1:12345/test/file", RequestMethod.HTTP_POST);
+//		SSLEngine.ignoreCertCheck();
+		HTTPMyClient cli = new HTTPMyClient("https://127.0.0.1:8448/test/file", RequestMethod.HTTP_POST);
+		cli.formBegin(true);
+		cli.formAdd("abc", "def");
+		cli.formAddFile("file", new File("/home/sswroom/Progs/Temp/7gogo.jpg"));
+		System.out.println("Status = "+cli.getRespStatus());
+		System.out.println("Resp = "+new String(cli.readToEnd(), StandardCharsets.UTF_8));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 53;
+		int type = 54;
 		switch (type)
 		{
 		case 0:
@@ -1256,6 +1269,9 @@ public class MiscTest
 			break;
 		case 53:
 			azureTest();
+			break;
+		case 54:
+			httpFilePostTest();
 			break;
 		}
 	}

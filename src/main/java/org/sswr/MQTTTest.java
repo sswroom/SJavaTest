@@ -13,6 +13,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 
 import org.sswr.util.net.MQTTStaticClient;
+import org.sswr.util.net.SSLEngine;
 import org.sswr.temp.MQTTMsg;
 import org.sswr.util.net.FailoverType;
 import org.sswr.util.net.MQTTConn;
@@ -46,17 +47,18 @@ public class MQTTTest implements MQTTEventHdlr
 
 	public static void test0()
 	{
-		MQTTConn.publishMessage("localhost", 1883, TCPClientType.PLAIN, null, null, "Testing", "Hello");
+		MQTTConn.publishMessage("localhost", 1883, null, TCPClientType.PLAIN, null, null, "Testing", "Hello");
 	}
 
-	public static void test1()
+	public static void test1() throws Exception
 	{
+		SSLEngine ssl = new SSLEngine(false);
 		MQTTStaticClient cli;
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1883, TCPClientType.PLAIN, 30, null, null, true);
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1884, TCPClientType.PLAIN, 30, "ro", "readonly", true);
 		System.setProperty("javax.net.ssl.trustStore","keystore.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-		cli = new MQTTStaticClient("test.mosquitto.org", 8883, TCPClientType.SSL, 30, null, null, true);
+		cli = new MQTTStaticClient("test.mosquitto.org", 8883, ssl, TCPClientType.SSL, 30, null, null, true);
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 8885, TCPClientType.SSL, 30, "ro", "readonly", true);
 		if (cli.getConnError() == ConnError.CONNECTED)
 		{
@@ -92,10 +94,11 @@ public class MQTTTest implements MQTTEventHdlr
 		cli.close();
 	}
 
-	private static void test2()
+	private static void test2() throws Exception
 	{
+		SSLEngine ssl = new SSLEngine(false);
 		MQTTFailoverClient client = new MQTTFailoverClient(FailoverType.MASTER_SLAVE);
-		client.addClient(new MQTTStaticClient("gis2.ectrak.com.hk", 8901, TCPClientType.SSL, 30, "RFL_SPRING2", "RFL_SPRING2", true));
+		client.addClient(new MQTTStaticClient("gis2.ectrak.com.hk", 8901, ssl, TCPClientType.SSL, 30, "RFL_SPRING2", "RFL_SPRING2", true));
 		client.subscribe("#", new MQTTMsg());
 //		client.addClient(new MQTTStaticClient("localhost", 1883, TCPClientType.PLAIN, 30, null, null, true));
 //		client.addClient(new MQTTStaticClient("localhost", 1884, TCPClientType.PLAIN, 30, null, null, true));
@@ -116,12 +119,13 @@ public class MQTTTest implements MQTTEventHdlr
 
 	private static void test3() throws Exception
 	{
+		SSLEngine ssl = new SSLEngine(false);
 		MQTTStaticClient cli;
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1883, TCPClientType.PLAIN, 30, null, null, true);
 //			cli = new MQTTClient(InetAddress.getByName("test.mosquitto.org"), 1884, TCPClientType.PLAIN, 30, "ro", "readonly", true);
 //		System.setProperty("javax.net.ssl.trustStore","keystore.jks");
 //		System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-		cli = new MQTTStaticClient("test.mosquitto.org", 8883, TCPClientType.SSL, 30, null, null, true);
+		cli = new MQTTStaticClient("test.mosquitto.org", 8883, ssl, TCPClientType.SSL, 30, null, null, true);
 		if (cli.getConnError() == ConnError.CONNECTED)
 		{
 			cli.handleEvents(new MQTTTest());
