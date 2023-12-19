@@ -111,7 +111,8 @@ import org.sswr.util.net.SocketFactory;
 import org.sswr.util.net.TCPClient;
 import org.sswr.util.net.TCPClientType;
 import org.sswr.util.net.email.SMTPMessage;
-import org.sswr.util.net.email.EmailMessage;
+import org.sswr.util.net.email.SimpleEmailMessage;
+import org.sswr.util.net.email.POP3EmailReader.ConnType;
 import org.sswr.util.net.email.EmailUtil;
 import org.sswr.util.net.email.IMAPEmailReader;
 import org.sswr.util.net.email.POP3EmailReader;
@@ -546,7 +547,7 @@ public class MiscTest
 
 	public static void pop3Test()
 	{
-		POP3EmailReader reader = new POP3EmailReader("127.0.0.1", 110, false, "sswroom@yahoo.com", "sswroom@yahoo.com");
+		POP3EmailReader reader = new POP3EmailReader("127.0.0.1", 110, ConnType.PLAIN, null, "sswroom@yahoo.com", "sswroom@yahoo.com");
 		reader.open();
 		Message[] messages = reader.getMessages();
 		int i = 0;
@@ -866,37 +867,8 @@ public class MiscTest
 		logger.addPrintLog(System.out, LogLevel.RAW);
 //		SMTPDirectEmailControl ctrl = new SMTPDirectEmailControl("127.0.0.1", null, SMTPConnType.PLAIN, "test", "test", "sswroom@yahoo.com", logger);
 		SMTPEmailControl ctrl = new SMTPEmailControl("127.0.0.1", null, false, "test", "test", "sswroom@yahoo.com", logger);
-		EmailMessage msg = new EmailMessage()
-		{
-			public String getContent()
-			{
-				return "Testing";
-			}
-
-			public String getSubject()
-			{
-				return "Test subject";
-			}
-
-			public void addAttachment(String attachmentPath)
-			{
-			}
-
-			public int getAttachmentCount()
-			{
-				return 1;
-			}
-
-			public String getAttachment(int index)
-			{
-				if (index == 0)
-				{
-					return "/home/sswroom/Progs/Temp/OCR1.jpg";
-				}
-				return null;
-			}
-		};
-
+		SimpleEmailMessage msg = new SimpleEmailMessage("Test subject", "Testing", false);
+		msg.addAttachment("/home/sswroom/Progs/Temp/OCR1.jpg");
 		ctrl.sendMail(msg, "sswroom@yahoo.com", null);
 		System.exit(0);
 	}
