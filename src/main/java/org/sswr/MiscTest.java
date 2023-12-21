@@ -868,7 +868,7 @@ public class MiscTest
 //		SMTPDirectEmailControl ctrl = new SMTPDirectEmailControl("127.0.0.1", null, SMTPConnType.PLAIN, "test", "test", "sswroom@yahoo.com", logger);
 		SMTPEmailControl ctrl = new SMTPEmailControl("127.0.0.1", null, false, "test", "test", "sswroom@yahoo.com", logger);
 		SimpleEmailMessage msg = new SimpleEmailMessage("Test subject", "Testing", false);
-		msg.addAttachment("/home/sswroom/Progs/Temp/OCR1.jpg");
+		msg.addAttachmentFile("/home/sswroom/Progs/Temp/OCR1.jpg");
 		ctrl.sendMail(msg, "sswroom@yahoo.com", null);
 		System.exit(0);
 	}
