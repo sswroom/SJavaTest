@@ -113,6 +113,7 @@ import org.sswr.util.net.TCPClientType;
 import org.sswr.util.net.email.SMTPMessage;
 import org.sswr.util.net.email.SimpleEmailMessage;
 import org.sswr.util.net.email.POP3EmailReader.ConnType;
+import org.sswr.util.net.email.EmailAddress;
 import org.sswr.util.net.email.EmailUtil;
 import org.sswr.util.net.email.IMAPEmailReader;
 import org.sswr.util.net.email.POP3EmailReader;
@@ -527,11 +528,11 @@ public class MiscTest
 		SMTPClient smtp = new SMTPClient(host, port, ssl, connType, new PrintStreamWriter(System.out));
 		smtp.setPlainAuth(userName, password);
 		SMTPMessage message = new SMTPMessage();
-		message.setFrom(fromName, fromAddr);
+		message.setFrom(new EmailAddress(fromName, fromAddr));
 		message.setSubject("測試中");
 		message.setContent("中文測試, akfsld;jkafjka;fdsjkaf", "text/html; charset=utf-8");
 		message.setSentDate(ZonedDateTime.now());
-		message.addTo(null, toAddr);
+		message.addTo(new EmailAddress(null, toAddr));
 		smtp.send(message);
 	}
 
