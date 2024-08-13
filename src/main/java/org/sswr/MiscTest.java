@@ -61,6 +61,7 @@ import org.sswr.model.TestTable;
 import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.CertUtil;
 import org.sswr.util.crypto.IntKeyHandler;
+import org.sswr.util.crypto.MD5;
 import org.sswr.util.crypto.MyX509Key;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
@@ -1075,10 +1076,30 @@ public class MiscTest
 		System.out.println("Status = "+cli.getRespStatus());
 		System.out.println("Resp = "+new String(cli.readToEnd(), StandardCharsets.UTF_8));
 	}
+	
+	public static void md5Test()
+	{
+		byte[] testBlock = "The quick brown fox jumps over the lazy dog".getBytes(StandardCharsets.UTF_8);
+		MD5 hash = new MD5();
+		System.out.println(StringUtil.toHex(hash.getValue()));
+		System.out.println("D41D8CD98F00B204E9800998ECF8427E");
+		System.out.println();
+		hash.calc(testBlock);
+		System.out.println(StringUtil.toHex(hash.getValue()));
+		System.out.println("9E107D9D372BB6826BD81D3542A419D6");
+		System.out.println();
+		hash.calc(testBlock);
+		System.out.println(StringUtil.toHex(hash.getValue()));
+		System.out.println("D27C6D8BCAA695E377D32387E115763C");
+		System.out.println();
+		hash.calc(testBlock);
+		System.out.println(StringUtil.toHex(hash.getValue()));
+		System.out.println("4E67DB4A7A406B0CFDADD887CDE7888E");
+	}
 
 	public static void main(String args[]) throws Exception
 	{
-		int type = 54;
+		int type = 55;
 		switch (type)
 		{
 		case 0:
@@ -1245,6 +1266,9 @@ public class MiscTest
 			break;
 		case 54:
 			httpFilePostTest();
+			break;
+		case 55:
+			md5Test();
 			break;
 		}
 	}

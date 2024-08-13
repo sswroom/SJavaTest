@@ -23,34 +23,34 @@ public class AESTest
 		System.out.println();
 
 		System.out.println("Test vector: " + StringUtil.toHex(testVector1, 0, 16));
-		cipherText = aes.encrypt(testVector1, 0, 16, null);
+		cipherText = aes.encrypt(testVector1, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "3ad77bb40d7a3660a89ecaf32466ef97");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 
 		System.out.println("Test vector: " + StringUtil.toHex(testVector2, 0, 16));
-		cipherText = aes.encrypt(testVector2, 0, 16, null);
+		cipherText = aes.encrypt(testVector2, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "f5d3d58503b9699de785895a96fdbaaf");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 			
 		System.out.println("Test vector: " + StringUtil.toHex(testVector3, 0, 16));
-		cipherText = aes.encrypt(testVector3, 0, 16, null);
+		cipherText = aes.encrypt(testVector3, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "43b1cd7f598ece23881b00e3ed030688");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 			
 		System.out.println("Test vector: " + StringUtil.toHex(testVector4, 0, 16));
-		cipherText = aes.encrypt(testVector4, 0, 16, null);
+		cipherText = aes.encrypt(testVector4, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "7b0c785e27e8ad3f8223207104725dd4");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 	}
@@ -72,34 +72,34 @@ public class AESTest
 		System.out.println();
 
 		System.out.println("Test vector: " + StringUtil.toHex(testVector1, 0, 16));
-		cipherText = aes.encrypt(testVector1, 0, 16, null);
+		cipherText = aes.encrypt(testVector1, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "bd334f1d6e45f25ff712a214571fa5cc");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 
 		System.out.println("Test vector: " + StringUtil.toHex(testVector2, 0, 16));
-		cipherText = aes.encrypt(testVector2, 0, 16, null);
+		cipherText = aes.encrypt(testVector2, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "974104846d0ad3ad7734ecb3ecee4eef");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 			
 		System.out.println("Test vector: " + StringUtil.toHex(testVector3, 0, 16));
-		cipherText = aes.encrypt(testVector3, 0, 16, null);
+		cipherText = aes.encrypt(testVector3, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "ef7afd2270e2e60adce0ba2face6444e");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 			
 		System.out.println("Test vector: " + StringUtil.toHex(testVector4, 0, 16));
-		cipherText = aes.encrypt(testVector4, 0, 16, null);
+		cipherText = aes.encrypt(testVector4, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "9a4b41ba738d6c72fb16691603c18e0e");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 	}
@@ -121,34 +121,34 @@ public class AESTest
 		System.out.println();
 
 		System.out.println("Test vector: " + StringUtil.toHex(testVector1, 0, 16));
-		cipherText = aes.encrypt(testVector1, 0, 16, null);
+		cipherText = aes.encrypt(testVector1, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "f3eed1bdb5d2a03c064b5a7e3db181f8");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 
 		System.out.println("Test vector: " + StringUtil.toHex(testVector2, 0, 16));
-		cipherText = aes.encrypt(testVector2, 0, 16, null);
+		cipherText = aes.encrypt(testVector2, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "591ccb10d410ed26dc5ba74a31362870");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 			
 		System.out.println("Test vector: " + StringUtil.toHex(testVector3, 0, 16));
-		cipherText = aes.encrypt(testVector3, 0, 16, null);
+		cipherText = aes.encrypt(testVector3, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "b6ed21b99ca6f4f9f153e7b1beafed1d");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 			
 		System.out.println("Test vector: " + StringUtil.toHex(testVector4, 0, 16));
-		cipherText = aes.encrypt(testVector4, 0, 16, null);
+		cipherText = aes.encrypt(testVector4, 0, 16);
 		System.out.println("Cipher text: " + StringUtil.toHex(cipherText, 0, 16));
 		System.out.println("Expected:    " + "23304b7a39f9f3ff067d8d8f9e24ecc7");
-		decText = aes.decrypt(cipherText, 0, 16, null);
+		decText = aes.decrypt(cipherText, 0, 16);
 		System.out.println("DecryptText: " + StringUtil.toHex(decText, 0, 16));
 		System.out.println();
 	}

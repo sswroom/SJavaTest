@@ -3,9 +3,9 @@ package org.sswr.model;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.sswr.util.data.DataTools;
 
