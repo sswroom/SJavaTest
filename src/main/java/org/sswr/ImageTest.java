@@ -155,7 +155,7 @@ public class ImageTest {
 	{
 		try
 		{
-			ImageList imgList = ImageUtil.load(new FileInputStream(srcFile));
+			ImageList imgList = ImageUtil.load(new FileInputStream(srcFile), srcFile);
 			if (imgList == null)
 			{
 				System.out.println("Error in reading image");

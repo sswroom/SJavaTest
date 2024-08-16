@@ -104,7 +104,8 @@ import org.sswr.util.net.ASN1OIDInfo;
 import org.sswr.util.net.AzureManager;
 import org.sswr.util.net.DNSClient;
 import org.sswr.util.net.DNSRequestAnswer;
-import org.sswr.util.net.HTTPMyClient;
+import org.sswr.util.net.HTTPClient;
+import org.sswr.util.net.HTTPOSClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.RequestMethod;
 import org.sswr.util.net.SSLEngine;
@@ -318,6 +319,13 @@ public class MiscTest
 		result = bcrypt.isMatch("$2a$12$aroG/pwwPj1tU5fl9a9pkO4rydAmkXRj/LqfHZOSnR6LGAZ.z.jwa", "ptAP\"mcg6oH.\";c0U2_oll.OKi<!ku");
 		t2 = System.currentTimeMillis();
 		System.out.println("Equals3: "+result + ", t = "+(t2 - t1));
+
+		t1 = System.currentTimeMillis();
+		String hash = bcrypt.genHash(12, "ptAP\"mcg6oH.\";c0U2_oll.OKi<!ku");
+		System.out.println("Gen Hash: "+hash);
+		result = bcrypt.isMatch(hash, "ptAP\"mcg6oH.\";c0U2_oll.OKi<!ku");
+		t2 = System.currentTimeMillis();
+		System.out.println("Equals4: "+result + ", t = "+(t2 - t1));
 	}
 
 	public static void pingTest()
@@ -354,7 +362,7 @@ public class MiscTest
 
 	public static void httpTest()
 	{
-		System.out.println(HTTPMyClient.getAsString("http://127.0.0.1:12345", 200));
+		System.out.println(HTTPOSClient.getAsString("http://127.0.0.1:12345", 200));
 /*		try
 		{
 			HTTPMyClient cli = new HTTPMyClient("http://127.0.0.1:12345", "GET");
@@ -433,7 +441,7 @@ public class MiscTest
 
 	public static void jsonWebTest() throws IOException
 	{
-		HTTPMyClient cli = new HTTPMyClient("https://www.1823.gov.hk/common/ical/en.json", RequestMethod.HTTP_GET);
+		HTTPClient cli = HTTPClient.createConnect(null, null, "https://www.1823.gov.hk/common/ical/en.json", RequestMethod.HTTP_GET, true);
 		byte[] buff = cli.readToEnd();
 		System.out.println(buff.length);
 		String jsonStr = new String(buff, StandardCharsets.UTF_8);
@@ -1069,7 +1077,7 @@ public class MiscTest
 	{
 //		HTTPMyClient cli = new HTTPMyClient("http://127.0.0.1:12345/test/file", RequestMethod.HTTP_POST);
 //		SSLEngine.ignoreCertCheck();
-		HTTPMyClient cli = new HTTPMyClient("https://127.0.0.1:8448/test/file", RequestMethod.HTTP_POST);
+		HTTPClient cli = HTTPClient.createConnect(null, null, "https://127.0.0.1:8448/test/file", RequestMethod.HTTP_POST, true);
 		cli.formBegin(true);
 		cli.formAdd("abc", "def");
 		cli.formAddFile("file", new File("/home/sswroom/Progs/Temp/7gogo.jpg"));
@@ -1099,7 +1107,7 @@ public class MiscTest
 
 	public static void main(String args[]) throws Exception
 	{
-		int type = 55;
+		int type = 7;
 		switch (type)
 		{
 		case 0:
