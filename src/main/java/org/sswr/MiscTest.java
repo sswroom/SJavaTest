@@ -1105,9 +1105,14 @@ public class MiscTest
 		System.out.println("4E67DB4A7A406B0CFDADD887CDE7888E");
 	}
 
+	public static void clearMonthTest()
+	{
+		System.out.println(DateTimeUtil.toString(DateTimeUtil.clearDayOfMonth(DateTimeUtil.timestampNow())));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 7;
+		int type = 56;
 		switch (type)
 		{
 		case 0:
@@ -1277,6 +1282,9 @@ public class MiscTest
 			break;
 		case 55:
 			md5Test();
+			break;
+		case 56:
+			clearMonthTest();
 			break;
 		}
 	}
