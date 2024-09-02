@@ -1110,9 +1110,17 @@ public class MiscTest
 		System.out.println(DateTimeUtil.toString(DateTimeUtil.clearDayOfMonth(DateTimeUtil.timestampNow())));
 	}
 
+	public static void utf16LengthTest()
+	{
+		String s = "98765432";
+		System.out.println(s +": length = "+s.length()+", length16 = "+StringUtil.utf16CharCnt(s));
+		byte[] bytes = s.getBytes(StandardCharsets.UTF_16);
+		System.out.println(StringUtil.toHex(bytes));
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 56;
+		int type = 57;
 		switch (type)
 		{
 		case 0:
@@ -1285,6 +1293,9 @@ public class MiscTest
 			break;
 		case 56:
 			clearMonthTest();
+			break;
+		case 57:
+			utf16LengthTest();
 			break;
 		}
 	}
