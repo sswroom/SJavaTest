@@ -72,6 +72,7 @@ import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
+import org.sswr.util.data.textbinenc.EncodingException;
 import org.sswr.util.db.CSVUtil;
 import org.sswr.util.db.DBUtil;
 import org.sswr.util.exporter.PEMExporter;
@@ -293,9 +294,16 @@ public class MiscTest
 	{
 		int id = 123456;
 		System.out.println("id = "+id);
-		String key = IntKeyHandler.generate(id, 16, true);
-		System.out.println("key = "+key);
-		System.out.println("extracted id = "+IntKeyHandler.parseKey(key, true));
+		try
+		{
+			String key = IntKeyHandler.generate(id, 16, true);
+			System.out.println("key = "+key);
+			System.out.println("extracted id = "+IntKeyHandler.parseKey(key, true));
+		}
+		catch (EncodingException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public static void bcryptTest()
