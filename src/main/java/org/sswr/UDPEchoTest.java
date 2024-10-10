@@ -7,6 +7,8 @@ import org.sswr.util.io.LogTool;
 import org.sswr.util.net.UDPPacketListener;
 import org.sswr.util.net.UDPServer;
 
+import jakarta.annotation.Nonnull;
+
 public class UDPEchoTest implements UDPPacketListener
 {
 	private UDPServer svr;
@@ -24,7 +26,7 @@ public class UDPEchoTest implements UDPPacketListener
 	}
 
 	@Override
-	public void udpPacketReceived(InetAddress addr, int port, byte[] buff, int ofst, int length) {
+	public void udpPacketReceived(@Nonnull InetAddress addr, int port, @Nonnull byte[] buff, int ofst, int length) {
 		System.out.println("Received "+length+" bytes");
 		this.svr.sendTo(addr, port, buff, ofst, length);
 	}

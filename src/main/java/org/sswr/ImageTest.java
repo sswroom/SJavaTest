@@ -162,16 +162,23 @@ public class ImageTest {
 				return;
 			}
 			StaticImage img = imgList.getImage(0);
-			System.out.println(img.toString());
-			Size2D size = Resizer.calcOutputSize(img.getWidth(), img.getHeight(), img.getPixelAspectRatio(), pxSize, pxSize, ResizeAspectRatio.SQUARE_PIXEL);
-			StaticImage newImg = new NearestNeighbourResizer().resize(img, size);
-			if (ImageUtil.saveAsJpg(newImg, new FileOutputStream(destFile), 1.0f))
+			if (img == null)
 			{
-				System.out.println("Small Image exported");
+				System.out.println("img is null");
 			}
 			else
 			{
-				System.out.println("Error in exporting to jpg");
+				System.out.println(img.toString());
+				Size2D size = Resizer.calcOutputSize(img.getWidth(), img.getHeight(), img.getPixelAspectRatio(), pxSize, pxSize, ResizeAspectRatio.SQUARE_PIXEL);
+				StaticImage newImg = new NearestNeighbourResizer().resize(img, size);
+				if (ImageUtil.saveAsJpg(newImg, new FileOutputStream(destFile), 1.0f))
+				{
+					System.out.println("Small Image exported");
+				}
+				else
+				{
+					System.out.println("Error in exporting to jpg");
+				}
 			}
 		}
 		catch (IOException ex)

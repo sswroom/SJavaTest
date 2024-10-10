@@ -16,6 +16,11 @@ public class JWTTest
 	public static void main(String args[])
 	{
 		JWTHandler jwt = JWTHandler.createHMAC(Algorithm.HS256, "your-256-bit-secret".getBytes(StandardCharsets.UTF_8));
+		if (jwt == null)
+		{
+			System.out.println("jwt setting is not supported");
+			return;
+		}
 		JWTParam param = new JWTParam();
 		param.setSubject("1234567890");
 		param.setIssuedAt(1516239022);

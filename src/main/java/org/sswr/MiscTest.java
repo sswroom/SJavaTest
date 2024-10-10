@@ -38,15 +38,6 @@ import java.util.zip.ZipFile;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.Flags.Flag;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -62,6 +53,7 @@ import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.CertUtil;
 import org.sswr.util.crypto.IntKeyHandler;
 import org.sswr.util.crypto.MD5;
+import org.sswr.util.crypto.MyX509Cert;
 import org.sswr.util.crypto.MyX509Key;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
@@ -136,6 +128,16 @@ import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfObject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStream;
+
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.Flags.Flag;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 public class MiscTest
 {
@@ -263,7 +265,6 @@ public class MiscTest
 				}
 			};
 		}
-
 
 		Session session;
 		if (auth != null)
@@ -444,7 +445,14 @@ public class MiscTest
 		String jsonStr = new String(fis.readAllBytes(), StandardCharsets.UTF_8);
 		fis.close();
 		Object o = JSONParser.parse(jsonStr);
-		System.out.println(o.getClass().getName());
+		if (o == null)
+		{
+			System.out.println("o is null");
+		}
+		else
+		{
+			System.out.println(o.getClass().getName());
+		}
 	}
 
 	public static void jsonWebTest() throws IOException
@@ -455,7 +463,14 @@ public class MiscTest
 		String jsonStr = new String(buff, StandardCharsets.UTF_8);
 		cli.close();
 		Object o = JSONParser.parse(jsonStr);
-		System.out.println(o.getClass().getName());
+		if (o == null)
+		{
+			System.out.println("o is null");
+		}
+		else
+		{
+			System.out.println(o.getClass().getName());
+		}
 	}
 
 	private static boolean inMonthlyRange(ZonedDateTime lastCheck, ZonedDateTime currTime, int monthlyAdj)
@@ -568,24 +583,31 @@ public class MiscTest
 		POP3EmailReader reader = new POP3EmailReader("127.0.0.1", 110, ConnType.PLAIN, null, "sswroom@yahoo.com", "sswroom@yahoo.com");
 		reader.open();
 		Message[] messages = reader.getMessages();
-		int i = 0;
-		int j = messages.length;
-		while (i < j)
+		if (messages == null)
 		{
-			try
+			System.out.println("messages is null");
+		}
+		else
+		{
+			int i = 0;
+			int j = messages.length;
+			while (i < j)
 			{
-				messages[i].writeTo(System.out);
-				messages[i].setFlag(Flag.DELETED, true);
+				try
+				{
+					messages[i].writeTo(System.out);
+					messages[i].setFlag(Flag.DELETED, true);
+				}
+				catch (IOException ex)
+				{
+					ex.printStackTrace();
+				}
+				catch (MessagingException ex)
+				{
+					ex.printStackTrace();
+				}
+				i++;
 			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-			catch (MessagingException ex)
-			{
-				ex.printStackTrace();
-			}
-			i++;
 		}
 		reader.close();
 	}
@@ -622,16 +644,36 @@ public class MiscTest
 		Message msg;
 		//msg = EmailUtil.loadFromEml(new File("/home/sswroom/Progs/SClass/build/Linux_dbg_x64/bin/SMTP/1653654195568.eml"));
 		msg = EmailUtil.loadFromEml(new File("/home/sswroom/Progs/SClass/build/Linux_dbg_x64/bin/SMTP/1654172477245.eml"));
-		System.out.println("Is SMIME: "+EmailUtil.isSMIME(msg));
-		ReceivedEmail email = EmailUtil.toReceivedEmail(msg);
-		System.out.println(email.toString());
+		if (msg == null)
+		{
+			System.out.println("msg is null");
+		}
+		else
+		{
+			System.out.println("Is SMIME: "+EmailUtil.isSMIME(msg));
+			ReceivedEmail email = EmailUtil.toReceivedEmail(msg);
+			if (email == null)
+			{
+				System.out.println("email is null");
+			}
+			else
+			{
+				System.out.println(email.toString());
+			}
+		}
 	}
 
 	public static void crlTest()
 	{
 		X509CRL crl = CertUtil.loadCRL("/home/sswroom/Progs/Temp/20230327 CRL Test/eCertCA2-15CRL1.crl");
-		
-		System.out.println("isValid = " + CertUtil.isValid(crl));
+		if (crl == null)
+		{
+			System.out.println("crl is null");
+		}
+		else
+		{
+			System.out.println("isValid = " + CertUtil.isValid(crl));
+		}
 	}
 
 	public static void signTest()
@@ -694,7 +736,14 @@ public class MiscTest
 	{
 		Printer printer = new Printer("PDF");
 		PrintDocument doc = printer.startPrint(new MyPrintHandler());
-		printer.endPrint(doc);
+		if (doc == null)
+		{
+			System.out.println("doc is null");
+		}
+		else
+		{
+			printer.endPrint(doc);
+		}
 	}
 
 	public static void printDocTest()
@@ -807,14 +856,29 @@ public class MiscTest
 	public static void certExportTest()
 	{
 		KeyStore ks = CertUtil.loadDefaultTrustStore();
-		try
+		if (ks == null)
 		{
-			Certificate cert = ks.getCertificate(ks.aliases().nextElement());
-			PEMExporter.exportFile("/home/sswroom/Progs/Temp/exporttest.crt", CertUtil.toMyCert(cert));
+			System.out.println("Error in loading trust store");
 		}
-		catch (KeyStoreException ex)
+		else
 		{
-			ex.printStackTrace();
+			try
+			{
+				Certificate cert = ks.getCertificate(ks.aliases().nextElement());
+				MyX509Cert myCert = CertUtil.toMyCert(cert);
+				if (myCert == null)
+				{
+					System.out.println("Error in converting to myCert");
+				}
+				else
+				{
+					PEMExporter.exportFile("/home/sswroom/Progs/Temp/exporttest.crt", myCert);
+				}
+			}
+			catch (KeyStoreException ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 	}
 

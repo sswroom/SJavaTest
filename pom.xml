@@ -23,17 +23,12 @@
 			<artifactId>metadata-extractor</artifactId>
 			<version>2.15.0</version>
 		</dependency>
-	<dependency>
-		<groupId>javax.mail</groupId>
-		<artifactId>mail</artifactId>
-		<version>1.4</version>
-	</dependency>
-	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>4.11</version>
-		<scope>test</scope>
-	</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
@@ -47,7 +42,7 @@
 		<dependency>
 			<groupId>io.github.sswroom</groupId>
 			<artifactId>util-deps</artifactId>
-			<version>[0.1,)</version>
+			<version>[0.4,)</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.ucanaccess</groupId>

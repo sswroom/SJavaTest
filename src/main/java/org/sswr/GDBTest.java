@@ -17,38 +17,45 @@ public class GDBTest
 	{
 		LogTool logger = new LogTool().addPrintLog(System.out, LogLevel.RAW);
 		FileGDBDir fgdb = FileGDBDir.openDir(FileUtil.getRealPath("~/Progs/Temp/E20210522_PLIS.gdb"), logger);
-		List<String> names = new ArrayList<String>();
-		fgdb.getTableNames(names);
-		System.out.println(DataTools.toObjectString(names));
-		String name = names.get(5);
-		System.out.println(name);
-		DBReader r = fgdb.getTableData("LAMPPOST", List.of("OBJECTID", "Shape"), 0, null, null);
-		if (r != null)
+		if (fgdb != null)
 		{
-			int i = 10;
-			while (i-- > 0 && r.readNext())
+			List<String> names = new ArrayList<String>();
+			fgdb.getTableNames(names);
+			System.out.println(DataTools.toObjectString(names));
+			String name = names.get(5);
+			System.out.println(name);
+			DBReader r = fgdb.getTableData("LAMPPOST", List.of("OBJECTID", "Shape"), 0, null, null);
+			if (r != null)
 			{
-				System.out.println(DataTools.toObjectString(r.getRowMap()));
+				int i = 10;
+				while (i-- > 0 && r.readNext())
+				{
+					System.out.println(DataTools.toObjectString(r.getRowMap()));
+				}
+				r.close();
 			}
-			r.close();
-		}
 
-		long t1 = System.currentTimeMillis();
-		List<Map<String, Object>> objList = new ArrayList<Map<String, Object>>();
-		r = fgdb.getTableData("LAMPPOST", null, 0, null, null);
-		if (r != null)
+			long t1 = System.currentTimeMillis();
+			List<Map<String, Object>> objList = new ArrayList<Map<String, Object>>();
+			r = fgdb.getTableData("LAMPPOST", null, 0, null, null);
+			if (r != null)
+			{
+				while (r.readNext())
+				{
+					objList.add(r.getRowMap());
+				}
+				r.close();
+			}
+			t1 = System.currentTimeMillis() - t1;
+			System.out.println("Time for getRowMap = "+t1);
+
+	//		System.out.println("Testing:");
+	//		System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, null, null, "objectId desc", 0, 0)));
+			fgdb.close();
+		}
+		else
 		{
-			while (r.readNext())
-			{
-				objList.add(r.getRowMap());
-			}
-			r.close();
+			System.out.println("Error in loading fgdb file");
 		}
-		t1 = System.currentTimeMillis() - t1;
-		System.out.println("Time for getRowMap = "+t1);
-
-//		System.out.println("Testing:");
-//		System.out.println(DataTools.toObjectString(fgdb.loadItemsAsList(Lamppost.class, null, null, null, "objectId desc", 0, 0)));
-		fgdb.close();
 	}
 }

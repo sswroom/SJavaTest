@@ -9,6 +9,8 @@ import org.sswr.util.media.PrintDocument;
 import org.sswr.util.media.PrintHandler;
 import org.sswr.util.media.PaperSize.PaperType;
 
+import jakarta.annotation.Nonnull;
+
 public class MyPrintHandler implements PrintHandler
 {
 	public MyPrintHandler()
@@ -16,13 +18,13 @@ public class MyPrintHandler implements PrintHandler
 	}
 	
 	@Override
-	public boolean beginPrint(PrintDocument doc) {
+	public boolean beginPrint(@Nonnull PrintDocument doc) {
 		doc.setDocName("JavaPrintTest");
 		return true;
 	}
 
 	@Override
-	public boolean printPage(int pageNum, Graphics2D printPage)
+	public boolean printPage(int pageNum, @Nonnull Graphics2D printPage)
 	{
 		if (pageNum == 0)
 		{
@@ -40,7 +42,7 @@ public class MyPrintHandler implements PrintHandler
 	}
 
 	@Override
-	public boolean endPrint(PrintDocument doc) {
+	public boolean endPrint(@Nonnull PrintDocument doc) {
 		return true;
 	}
 

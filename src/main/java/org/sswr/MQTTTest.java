@@ -23,6 +23,8 @@ import org.sswr.util.net.MQTTPublishMessageHdlr;
 import org.sswr.util.net.TCPClientType;
 import org.sswr.util.net.MQTTStaticClient.ConnError;
 
+import jakarta.annotation.Nonnull;
+
 public class MQTTTest implements MQTTEventHdlr
 {
 	public static void configSSL(String filePath) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException
@@ -66,12 +68,12 @@ public class MQTTTest implements MQTTEventHdlr
 			cli.subscribe("#", null);
 			cli.subscribe("/go-eCharger/#", new MQTTPublishMessageHdlr(){
 				@Override
-				public void onPublishMessage(String topic, byte[] buff, int buffOfst, int buffSize) {
+				public void onPublishMessage(@Nonnull String topic, @Nonnull byte[] buff, int buffOfst, int buffSize) {
 				}
 			});
 			cli.subscribe("/go-eCharger/+/loc", new MQTTPublishMessageHdlr(){
 				@Override
-				public void onPublishMessage(String topic, byte[] buff, int buffOfst, int buffSize) {
+				public void onPublishMessage(@Nonnull String topic, @Nonnull byte[] buff, int buffOfst, int buffSize) {
 					System.out.println("eChargerLoc Topic "+topic+" -> "+new String(buff, buffOfst, buffSize, StandardCharsets.UTF_8));		
 				}
 			});
@@ -170,7 +172,7 @@ public class MQTTTest implements MQTTEventHdlr
 	}
 
 	@Override
-	public void onPublishMessage(String topic, byte[] buff, int buffOfst, int buffSize) {
+	public void onPublishMessage(@Nonnull String topic, @Nonnull byte[] buff, int buffOfst, int buffSize) {
 		System.out.println("Topic "+topic+" -> "+new String(buff, buffOfst, buffSize, StandardCharsets.UTF_8));		
 	}
 
