@@ -75,6 +75,7 @@ import org.sswr.util.io.LogTool;
 import org.sswr.util.io.MODBUSTCPMaster;
 import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
+import org.sswr.util.io.ParserType;
 import org.sswr.util.io.PrintStreamWriter;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
@@ -85,6 +86,7 @@ import org.sswr.util.io.FileStream.BufferType;
 import org.sswr.util.io.FileStream.FileMode;
 import org.sswr.util.io.FileStream.FileShare;
 import org.sswr.util.io.device.ED538;
+import org.sswr.util.io.stmdata.FileData;
 import org.sswr.util.math.Coord2DDbl;
 import org.sswr.util.math.RectAreaDbl;
 import org.sswr.util.math.WKTReader;
@@ -118,6 +120,8 @@ import org.sswr.util.net.email.SMTPConnType;
 import org.sswr.util.net.email.SMTPEmailControl;
 import org.sswr.util.office.DocUtil;
 import org.sswr.util.office.PDFUtil;
+import org.sswr.util.parser.FullParserList;
+import org.sswr.util.parser.ParserList;
 
 import com.itextpdf.kernel.pdf.EncryptionConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -1190,9 +1194,25 @@ public class MiscTest
 		System.out.println(StringUtil.toHex(bytes));
 	}
 
+	public static void jpgParseTest()
+	{
+		String fileName = "test.JPG";
+		ParserList parsers = new FullParserList();
+		FileData fd = new FileData(fileName, false);
+		if (parsers.parseFileType(fd, ParserType.ImageList) != null)
+		{
+			System.out.println("Parse success");
+		}
+		else
+		{
+			System.out.println("Parse failed");
+		}
+		fd.close();
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 57;
+		int type = 58;
 		switch (type)
 		{
 		case 0:
@@ -1368,6 +1388,9 @@ public class MiscTest
 			break;
 		case 57:
 			utf16LengthTest();
+			break;
+		case 58:
+			jpgParseTest();
 			break;
 		}
 	}
