@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ProcessHandle.Info;
 import java.net.InetAddress;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
@@ -29,10 +30,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.Map.Entry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
@@ -76,6 +79,7 @@ import org.sswr.util.io.MODBUSTCPMaster;
 import org.sswr.util.io.MyProcess;
 import org.sswr.util.io.OSInfo;
 import org.sswr.util.io.ParserType;
+import org.sswr.util.io.Path;
 import org.sswr.util.io.PrintStreamWriter;
 import org.sswr.util.io.ResourceLoader;
 import org.sswr.util.io.StreamUtil;
@@ -100,12 +104,15 @@ import org.sswr.util.net.AzureManager;
 import org.sswr.util.net.DNSClient;
 import org.sswr.util.net.DNSRequestAnswer;
 import org.sswr.util.net.HTTPClient;
+import org.sswr.util.net.HTTPMyClient;
 import org.sswr.util.net.HTTPOSClient;
+import org.sswr.util.net.HTTPProxyTCPClient;
 import org.sswr.util.net.IcmpUtil;
 import org.sswr.util.net.RequestMethod;
 import org.sswr.util.net.SSLEngine;
 import org.sswr.util.net.SocketFactory;
 import org.sswr.util.net.TCPClient;
+import org.sswr.util.net.TCPClientFactory;
 import org.sswr.util.net.TCPClientType;
 import org.sswr.util.net.email.SMTPMessage;
 import org.sswr.util.net.email.SimpleEmailMessage;
@@ -461,7 +468,7 @@ public class MiscTest
 
 	public static void jsonWebTest() throws IOException
 	{
-		HTTPClient cli = HTTPClient.createConnect(null, null, "https://www.1823.gov.hk/common/ical/en.json", RequestMethod.HTTP_GET, true);
+		HTTPClient cli = HTTPClient.createConnect((SocketFactory)null, null, "https://www.1823.gov.hk/common/ical/en.json", RequestMethod.HTTP_GET, true);
 		byte[] buff = cli.readToEnd();
 		System.out.println(buff.length);
 		String jsonStr = new String(buff, StandardCharsets.UTF_8);
@@ -1153,7 +1160,7 @@ public class MiscTest
 	{
 //		HTTPMyClient cli = new HTTPMyClient("http://127.0.0.1:12345/test/file", RequestMethod.HTTP_POST);
 //		SSLEngine.ignoreCertCheck();
-		HTTPClient cli = HTTPClient.createConnect(null, null, "https://127.0.0.1:8448/test/file", RequestMethod.HTTP_POST, true);
+		HTTPClient cli = HTTPClient.createConnect((SocketFactory)null, null, "https://127.0.0.1:8448/test/file", RequestMethod.HTTP_POST, true);
 		cli.formBegin(true);
 		cli.formAdd("abc", "def");
 		cli.formAddFile("file", new File("/home/sswroom/Progs/Temp/7gogo.jpg"));
@@ -1210,9 +1217,87 @@ public class MiscTest
 		fd.close();
 	}
 
+	public static void envTest()
+	{
+		Map<String, String> env = System.getenv();
+		Iterator<String> keys = env.keySet().iterator();
+		while (keys.hasNext())
+		{
+			String key = keys.next();
+			String val = env.get(key);
+			System.out.println(key+" -> "+val);
+		}
+	}
+
+	public static void propertiesTest()
+	{
+		Properties prop = System.getProperties();
+		Iterator<Entry<Object, Object>> it = prop.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Entry<Object, Object> ent = it.next();
+			System.out.println(ent.getKey()+" -> "+ent.getValue());
+		}
+	}
+
+	public static void pathTest()
+	{
+		System.out.println(Path.getProcessFileName());
+		Info info = ProcessHandle.current().info();
+		System.out.println("CommandLine = "+info.commandLine().orElse(""));
+		System.out.println("Args = "+DataTools.toObjectStringWF(info.arguments().orElse(null)));
+	}
+
+	public static void argsTest()
+	{
+		System.out.println("Args = "+DataTools.toObjectStringWF(FileUtil.getArgs()));
+	}
+
+	public static void httpTest2()
+	{
+		String url = "https://sswroom.no-ip.org/";
+		SocketFactory sockf = SocketFactory.create();
+		TCPClientFactory clif = new TCPClientFactory(sockf);
+		try
+		{
+			SSLEngine ssl = new SSLEngine(false);
+			HTTPMyClient.setShowDebug(true);
+			HTTPClient cli = HTTPClient.createConnect(clif, ssl, url, RequestMethod.HTTP_GET, false);
+			byte[] buff = cli.readToEnd();
+			cli.dispose();
+			System.out.println("Received:\r\n"+new String(buff, StandardCharsets.UTF_8));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public static void httpProxyTest()
+	{
+		HTTPProxyTCPClient.setDebug(true);
+		HTTPMyClient.setShowDebug(true);
+		String url = "https://sswroom.no-ip.org/";
+		SocketFactory sockf = SocketFactory.create();
+		TCPClientFactory clif = new TCPClientFactory(sockf);
+		clif.setProxy("127.0.0.1", 12345, null, null);
+		try
+		{
+			SSLEngine ssl = new SSLEngine(false);
+			HTTPClient cli = HTTPClient.createConnect(clif, ssl, url, RequestMethod.HTTP_GET, false);
+			byte[] buff = cli.readToEnd();
+			cli.dispose();
+			System.out.println("Received:\r\n"+new String(buff, StandardCharsets.UTF_8));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 58;
+		int type = 64;
 		switch (type)
 		{
 		case 0:
@@ -1391,6 +1476,24 @@ public class MiscTest
 			break;
 		case 58:
 			jpgParseTest();
+			break;
+		case 59:
+			envTest();
+			break;
+		case 60:
+			propertiesTest();
+			break;
+		case 61:
+			pathTest();
+			break;
+		case 62:
+			argsTest();
+			break;
+		case 63:
+			httpTest2();
+			break;
+		case 64:
+			httpProxyTest();
 			break;
 		}
 	}
