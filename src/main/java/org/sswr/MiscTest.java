@@ -1295,9 +1295,14 @@ public class MiscTest
 		}
 	}
 
+	public static void computerNameTest()
+	{
+		System.out.println(SystemInfoUtil.getComputerName());
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 64;
+		int type = 65;
 		switch (type)
 		{
 		case 0:
@@ -1494,6 +1499,9 @@ public class MiscTest
 			break;
 		case 64:
 			httpProxyTest();
+			break;
+		case 65:
+			computerNameTest();
 			break;
 		}
 	}
