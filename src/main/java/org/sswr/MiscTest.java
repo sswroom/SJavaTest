@@ -962,7 +962,7 @@ public class MiscTest
 		SMTPEmailControl ctrl = new SMTPEmailControl("127.0.0.1", null, false, "test", "test", "sswroom@yahoo.com", logger);
 		SimpleEmailMessage msg = new SimpleEmailMessage("Test subject", "Testing", false);
 		msg.addAttachmentFile("/home/sswroom/Progs/Temp/OCR1.jpg");
-		ctrl.sendMail(msg, "sswroom@yahoo.com", null);
+		ctrl.sendMail(msg, "sswroom@yahoo.com", null, null);
 		System.exit(0);
 	}
 
