@@ -101,6 +101,7 @@ import org.sswr.util.media.PrintDocument;
 import org.sswr.util.media.Printer;
 import org.sswr.util.net.ASN1OIDInfo;
 import org.sswr.util.net.AzureManager;
+import org.sswr.util.net.ClamdClient;
 import org.sswr.util.net.DNSClient;
 import org.sswr.util.net.DNSRequestAnswer;
 import org.sswr.util.net.HTTPClient;
@@ -1300,9 +1301,26 @@ public class MiscTest
 		System.out.println(SystemInfoUtil.getComputerName());
 	}
 
+	public static void clamAVTest()
+	{
+		File file = new File("");
+		try
+		{
+			FileInputStream fis = new FileInputStream(file);
+			byte[] fileData = fis.readAllBytes();
+			fis.close();
+			ClamdClient cli = new ClamdClient(new TCPClientFactory(null), 3310);
+			System.out.println("File scan result: "+cli.noVirus(fileData));
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 65;
+		int type = 66;
 		switch (type)
 		{
 		case 0:
@@ -1502,6 +1520,9 @@ public class MiscTest
 			break;
 		case 65:
 			computerNameTest();
+			break;
+		case 66:
+			clamAVTest();
 			break;
 		}
 	}
