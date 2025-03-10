@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ProcessHandle.Info;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -50,7 +52,13 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.sswr.model.TestTable;
 import org.sswr.util.crypto.Bcrypt;
 import org.sswr.util.crypto.CertUtil;
@@ -141,6 +149,12 @@ import com.itextpdf.text.pdf.PdfObject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStream;
 
+import io.netty.channel.ChannelOption;
+import io.netty.channel.FixedRecvByteBufAllocator;
+import io.netty.channel.epoll.EpollDatagramChannel;
+import io.netty.resolver.dns.DnsAddressResolverGroup;
+import io.netty.resolver.dns.DnsNameResolverBuilder;
+import io.netty.resolver.dns.SequentialDnsServerAddressStreamProvider;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -150,6 +164,9 @@ import jakarta.mail.Transport;
 import jakarta.mail.Flags.Flag;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import reactor.core.publisher.Mono;
+import reactor.netty.transport.ProxyProvider;
+import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
 public class MiscTest
 {
@@ -1318,9 +1335,120 @@ public class MiscTest
 		}
 	}
 
+	public static void nettyDownloadTest()
+	{
+		String proxyHost = "127.0.0.1";
+		int proxyPort = 8080;
+//		String proxyUsername = null;
+//		String proxyPassword = null;
+		String url = "https://static.csdi.gov.hk/csdi-webpage/download/83cd933a39c7525581d6aa429a981c90/fgdb";
+
+ 		List<InetSocketAddress> dnsServerAddresses = List.of(new InetSocketAddress("8.8.8.8", 53), new InetSocketAddress("1.1.1.1", 53));
+        reactor.netty.http.client.HttpClient httpClient = reactor.netty.http.client.HttpClient.create()
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 90000)
+
+            // Increase receive buffer
+            .option(ChannelOption.SO_RCVBUF, 32 * 1024 * 1024)
+
+            // Increase send buffer
+            .option(ChannelOption.SO_SNDBUF, 32 * 1024 * 1024)
+
+            // Disable Nagle's algorithm for fast transmission
+            .option(ChannelOption.TCP_NODELAY, true)
+
+            // Force large buffer size
+            .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(32 * 1024 * 1024))
+
+            // 2 hours read timeout
+            .responseTimeout(Duration.ofHours(2))
+
+            .doOnConnected(conn -> conn
+                // 2 hours read timeout
+                .addHandlerLast(new io.netty.handler.timeout.ReadTimeoutHandler(2 * 60 * 60))
+                // 2 hours write timeout
+                .addHandlerLast(new io.netty.handler.timeout.WriteTimeoutHandler(2 * 60 * 60))
+                // 90 seconds idle timeout for read/write/all
+                .addHandlerLast(new io.netty.handler.timeout.IdleStateHandler(90, 90, 90))
+            )
+            // Enable compression if applicable
+            .compress(false)
+            // Enable detailed logging (useful for debugging)
+            //.wiretap(true)
+
+            //tmp
+            .wiretap("reactor.netty.http.client.HttpClient", io.netty.handler.logging.LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL); // Log everything
+
+		httpClient = httpClient.proxy(proxy -> {
+//			ProxyProvider.Builder proxyBuilder = 
+				proxy.type(ProxyProvider.Proxy.HTTP)
+					.host(proxyHost)
+					.port(proxyPort);
+
+			// Apply authentication only if username & password are provided
+/*			if (proxyUsername != null && !proxyUsername.isBlank() &&
+					proxyPassword != null && !proxyPassword.isBlank()) {
+				proxyBuilder.username(proxyUsername)
+						.password(pass -> proxyPassword);
+			}*/
+		});
+
+		DnsAddressResolverGroup dnsResolverGroup = new DnsAddressResolverGroup(
+				new DnsNameResolverBuilder()
+//					.channelType(NioDatagramChannel.class)
+					.channelType(EpollDatagramChannel.class)
+					.nameServerProvider(new SequentialDnsServerAddressStreamProvider(dnsServerAddresses))
+		);
+
+		httpClient = httpClient.resolver(dnsResolverGroup);
+
+        // Create custom ExchangeStrategies (for controlling how data is serialized and deserialized)
+        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+            .codecs(configurer -> {
+                // Set a larger buffer size (32 MB here)
+                configurer.defaultCodecs().maxInMemorySize(32 * 1024 * 1024);
+                // Log requests for debugging
+                configurer.defaultCodecs().enableLoggingRequestDetails(true);
+            }).build();
+
+		WebClient.Builder builder = WebClient.builder();
+        WebClient webClient = builder
+            .clientConnector(new ReactorClientHttpConnector(httpClient)) // Use the custom HttpClient
+            .exchangeStrategies(exchangeStrategies) // Use the custom ExchangeStrategies
+            .build();
+
+		DataBuffer buffer = webClient.get()
+			.uri(url)
+			.accept(MediaType.APPLICATION_OCTET_STREAM)
+			.header(HttpHeaders.USER_AGENT, "Spring WebClient")
+			.retrieve()
+			.bodyToMono(DataBuffer.class)
+			.timeout(Duration.ofHours(2)) // Prevent hanging requests
+			.onErrorResume(ex -> {
+				System.err.println("Download failed: " + ex.getMessage());
+				ex.printStackTrace();
+				return Mono.empty();
+			})
+//			.as((dataBufferFlux) -> {System.out.println("Downloaded"); return Mono.empty();})
+			.block();
+		System.out.println(buffer.toString());
+/*			.then()
+			.publishOn(Schedulers.boundedElastic())
+			.doOnSuccess((aVoid) -> {
+				try {
+					if(Files.size(tmpPath) > 0)
+					{
+						System.out.println("Download completed: " + tmpPath);
+						cont.set(true);
+					}
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			});*/
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 66;
+		int type = 67;
 		switch (type)
 		{
 		case 0:
@@ -1523,6 +1651,9 @@ public class MiscTest
 			break;
 		case 66:
 			clamAVTest();
+			break;
+		case 67:
+			nettyDownloadTest();
 			break;
 		}
 	}
