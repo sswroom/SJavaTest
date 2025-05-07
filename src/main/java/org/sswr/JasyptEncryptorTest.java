@@ -2,9 +2,9 @@ package org.sswr;
 
 import java.nio.charset.StandardCharsets;
 
-import org.sswr.util.crypto.JasyptEncryptor;
-import org.sswr.util.crypto.JasyptEncryptor.CipherAlgorithm;
-import org.sswr.util.crypto.JasyptEncryptor.KeyAlgorithm;
+import org.sswr.util.crypto.encrypt.JasyptEncryptor;
+import org.sswr.util.crypto.encrypt.JasyptEncryptor.CipherAlgorithm;
+import org.sswr.util.crypto.encrypt.JasyptEncryptor.KeyAlgorithm;
 
 public class JasyptEncryptorTest
 {

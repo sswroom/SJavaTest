@@ -1,9 +1,9 @@
 package org.sswr;
 
-import org.sswr.util.crypto.AES128;
-import org.sswr.util.crypto.AES192;
-import org.sswr.util.crypto.AES256;
-import org.sswr.util.crypto.EncryptionException;
+import org.sswr.util.crypto.encrypt.AES128;
+import org.sswr.util.crypto.encrypt.AES192;
+import org.sswr.util.crypto.encrypt.AES256;
+import org.sswr.util.crypto.encrypt.EncryptionException;
 import org.sswr.util.data.StringUtil;
 
 public class AESTest

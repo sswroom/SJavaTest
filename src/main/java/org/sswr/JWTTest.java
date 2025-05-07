@@ -4,12 +4,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
-import org.sswr.util.crypto.JWTHandler;
-import org.sswr.util.crypto.JWTParam;
-import org.sswr.util.crypto.JWToken;
-import org.sswr.util.crypto.MyX509Cert;
-import org.sswr.util.crypto.MyX509Key;
-import org.sswr.util.crypto.JWSignature.Algorithm;
+import org.sswr.util.crypto.cert.MyX509Cert;
+import org.sswr.util.crypto.cert.MyX509Key;
+import org.sswr.util.crypto.token.JWSignature.Algorithm;
+import org.sswr.util.crypto.token.JWTHandler;
+import org.sswr.util.crypto.token.JWTParam;
+import org.sswr.util.crypto.token.JWToken;
 import org.sswr.util.data.DataTools;
 import org.sswr.util.data.JSONBase;
 import org.sswr.util.data.JSONMapper;

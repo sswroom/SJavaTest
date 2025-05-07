@@ -1,6 +1,6 @@
 package org.sswr;
 
-import org.sswr.util.crypto.SHA1;
+import org.sswr.util.crypto.hash.SHA1;
 import org.sswr.util.data.StringUtil;
 
 public class SHA1Test

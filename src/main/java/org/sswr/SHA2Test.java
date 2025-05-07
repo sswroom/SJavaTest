@@ -1,9 +1,9 @@
 package org.sswr;
 
-import org.sswr.util.crypto.SHA224;
-import org.sswr.util.crypto.SHA256;
-import org.sswr.util.crypto.SHA384;
-import org.sswr.util.crypto.SHA512;
+import org.sswr.util.crypto.hash.SHA224;
+import org.sswr.util.crypto.hash.SHA256;
+import org.sswr.util.crypto.hash.SHA384;
+import org.sswr.util.crypto.hash.SHA512;
 import org.sswr.util.data.StringUtil;
 
 public class SHA2Test

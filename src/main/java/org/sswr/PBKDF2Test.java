@@ -2,10 +2,10 @@ package org.sswr;
 
 import java.nio.charset.StandardCharsets;
 
-import org.sswr.util.crypto.HMAC;
-import org.sswr.util.crypto.Hash;
 import org.sswr.util.crypto.PBKDF2;
-import org.sswr.util.crypto.SHA1;
+import org.sswr.util.crypto.hash.Hash;
+import org.sswr.util.crypto.hash.SHA1;
+import org.sswr.util.crypto.hash.HMAC;
 import org.sswr.util.data.StringUtil;
 
 public class PBKDF2Test
