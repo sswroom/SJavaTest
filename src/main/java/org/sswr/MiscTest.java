@@ -1446,9 +1446,17 @@ public class MiscTest
 			});*/
 	}
 
+	public static void printSpaceTest()
+	{
+		System.out.print("日期");
+		System.out.print(' ');
+		System.out.print(' ');
+		System.out.print("測試");
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 67;
+		int type = 68;
 		switch (type)
 		{
 		case 0:
@@ -1654,6 +1662,9 @@ public class MiscTest
 			break;
 		case 67:
 			nettyDownloadTest();
+			break;
+		case 68:
+			printSpaceTest();
 			break;
 		}
 	}
