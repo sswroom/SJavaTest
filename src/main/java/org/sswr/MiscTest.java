@@ -1395,7 +1395,7 @@ public class MiscTest
 		DnsAddressResolverGroup dnsResolverGroup = new DnsAddressResolverGroup(
 				new DnsNameResolverBuilder()
 //					.channelType(NioDatagramChannel.class)
-					.channelType(EpollDatagramChannel.class)
+					.datagramChannelType(EpollDatagramChannel.class)
 					.nameServerProvider(new SequentialDnsServerAddressStreamProvider(dnsServerAddresses))
 		);
 
