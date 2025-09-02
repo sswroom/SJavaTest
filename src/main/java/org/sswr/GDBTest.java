@@ -19,12 +19,16 @@ public class GDBTest
 		FileGDBDir fgdb = FileGDBDir.openDir(FileUtil.getRealPath("~/Progs/Temp/E20210522_PLIS.gdb"), logger);
 		if (fgdb != null)
 		{
-			List<String> names = new ArrayList<String>();
-			fgdb.getTableNames(names);
+			List<String> names;
+			names = fgdb.queryTableNames(null);
 			System.out.println(DataTools.toObjectString(names));
-			String name = names.get(5);
+			String name;
+			if (names != null)
+				name = names.get(5);
+			else
+				name = null;
 			System.out.println(name);
-			DBReader r = fgdb.getTableData("LAMPPOST", List.of("OBJECTID", "Shape"), 0, null, null);
+			DBReader r = fgdb.queryTableData(null, "LAMPPOST", List.of("OBJECTID", "Shape"), 0, 0, null, null);
 			if (r != null)
 			{
 				int i = 10;
@@ -37,7 +41,7 @@ public class GDBTest
 
 			long t1 = System.currentTimeMillis();
 			List<Map<String, Object>> objList = new ArrayList<Map<String, Object>>();
-			r = fgdb.getTableData("LAMPPOST", null, 0, null, null);
+			r = fgdb.queryTableData(null, "LAMPPOST", null, 0, 0, null, null);
 			if (r != null)
 			{
 				while (r.readNext())
