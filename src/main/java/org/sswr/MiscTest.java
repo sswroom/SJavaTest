@@ -45,6 +45,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.locationtech.jts.geom.Coordinate;
@@ -745,8 +746,8 @@ public class MiscTest
 		System.out.println(DataTools.toObjectString(Printer.getPrinterNames()));
 		try
 		{
-			doc = PDDocument.load(new File(srcPDF));
-			doc2 = PDDocument.load(new File(pdf2));
+			doc = Loader.loadPDF(new File(srcPDF));
+			doc2 = Loader.loadPDF(new File(pdf2));
 			PDFUtil.append(doc, doc2);
 			doc.save(destPDF);
 			PDFUtil.close(doc);
