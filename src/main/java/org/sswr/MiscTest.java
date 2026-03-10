@@ -140,10 +140,14 @@ import org.sswr.util.office.PDFUtil;
 import org.sswr.util.parser.FullParserList;
 import org.sswr.util.parser.ParserList;
 
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.EncryptionConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.WriterProperties;
+import com.itextpdf.svg.converter.SvgConverter;
+import com.itextpdf.svg.processors.ISvgConverterProperties;
+import com.itextpdf.svg.processors.impl.SvgConverterProperties;
 import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfObject;
@@ -1455,9 +1459,27 @@ public class MiscTest
 		System.out.print("測試");
 	}
 
+	public static void svg2PdfTest()
+	{
+		String srcFile = "/home/sswroom/ProgsHome/FileTest/SVG/Output.svg";
+		String destFile = "/home/sswroom/ProgsHome/FileTest/SVG/Output.pdf";
+		try
+		{
+			PdfDocument doc = new PdfDocument(new PdfWriter(destFile, new WriterProperties().setCompressionLevel(0)));
+			doc.addNewPage(PageSize.A4);
+			ISvgConverterProperties properties = new SvgConverterProperties().setBaseUri(srcFile);
+			SvgConverter.drawOnDocument(new FileInputStream(srcFile), doc, 1, properties);
+			doc.close();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 68;
+		int type = 69;
 		switch (type)
 		{
 		case 0:
@@ -1666,6 +1688,9 @@ public class MiscTest
 			break;
 		case 68:
 			printSpaceTest();
+			break;
+		case 69:
+			svg2PdfTest();
 			break;
 		}
 	}
