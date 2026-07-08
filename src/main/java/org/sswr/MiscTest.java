@@ -17,6 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.X509CRL;
 import java.sql.Connection;
@@ -41,7 +42,10 @@ import java.util.Map.Entry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import javax.crypto.Cipher;
 import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
@@ -71,9 +75,11 @@ import org.sswr.util.data.DataTools;
 import org.sswr.util.data.DateTimeUtil;
 import org.sswr.util.data.GeometryUtil;
 import org.sswr.util.data.JSONParser;
+import org.sswr.util.data.LineBreakType;
 import org.sswr.util.data.SharedDouble;
 import org.sswr.util.data.SharedInt;
 import org.sswr.util.data.SharedLong;
+import org.sswr.util.data.StringBuilderUTF8;
 import org.sswr.util.data.StringUtil;
 import org.sswr.util.data.textbinenc.Base32Enc;
 import org.sswr.util.data.textbinenc.EncodingException;
@@ -140,6 +146,7 @@ import org.sswr.util.office.PDFUtil;
 import org.sswr.util.parser.FullParserList;
 import org.sswr.util.parser.ParserList;
 
+import com.itextpdf.kernel.geom.Line;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.EncryptionConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -1477,9 +1484,29 @@ public class MiscTest
 		}
 	}
 
+	public static void aes128GCMTest()
+	{
+		byte[] plainText = "The Quick Brown Fox Jumps Over The Lazy Dog. 12345!".getBytes(StandardCharsets.UTF_8);
+		byte[] key = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, (byte)0x88, (byte)0x99, (byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd, (byte)0xee, (byte)0xff};
+		byte[] iv = {1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0};
+        try {
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+            SecretKey secretKey = new SecretKeySpec(key, "AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
+
+            byte[] encryptedData = cipher.doFinal(plainText);
+			StringBuilderUTF8 sb = new StringBuilderUTF8();
+			sb.appendHexBuff(encryptedData, 0, encryptedData.length, (byte)' ', LineBreakType.CRLF);
+			System.out.println("AES128.Encrypt: " + sb.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	}
+
 	public static void main(String args[]) throws Exception
 	{
-		int type = 69;
+		int type = 70;
 		switch (type)
 		{
 		case 0:
@@ -1691,6 +1718,9 @@ public class MiscTest
 			break;
 		case 69:
 			svg2PdfTest();
+			break;
+		case 70:
+			aes128GCMTest();
 			break;
 		}
 	}
