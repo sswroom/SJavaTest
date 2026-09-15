@@ -233,25 +233,25 @@ public class MiscTest
 
 	public static byte[] otpDigest(byte[] secret, long currentInterval) throws NoSuchAlgorithmException, InvalidKeyException
 	{
-        byte[] challenge = ByteBuffer.allocate(8).putLong(currentInterval).array();
-        Mac mac = Mac.getInstance("HMACSHA1");
-        SecretKeySpec macKey = new SecretKeySpec(secret, "RAW");
-        mac.init(macKey);
-        return mac.doFinal(challenge);
+		byte[] challenge = ByteBuffer.allocate(8).putLong(currentInterval).array();
+		Mac mac = Mac.getInstance("HMACSHA1");
+		SecretKeySpec macKey = new SecretKeySpec(secret, "RAW");
+		mac.init(macKey);
+		return mac.doFinal(challenge);
 	}
 
 	public static int bytesToInt(byte[] hash)
 	{
-        // put selected bytes into result int
-        int offset = hash[hash.length - 1] & 0xf;
+		// put selected bytes into result int
+		int offset = hash[hash.length - 1] & 0xf;
 
-        int binary = ((hash[offset] & 0x7f) << 24) |
-                ((hash[offset + 1] & 0xff) << 16) |
-                ((hash[offset + 2] & 0xff) << 8) |
-                (hash[offset + 3] & 0xff);
+		int binary = ((hash[offset] & 0x7f) << 24) |
+				((hash[offset + 1] & 0xff) << 16) |
+				((hash[offset + 2] & 0xff) << 8) |
+				(hash[offset + 3] & 0xff);
 
-        return binary % 1000000;
-    }
+		return binary % 1000000;
+	}
 
 	public static void otpTest()
 	{
@@ -1180,7 +1180,7 @@ public class MiscTest
 		}
 		else
 		{
-			StringBuilder sb = new StringBuilder();
+			StringBuilderUTF8 sb = new StringBuilderUTF8();
 			key.toASN1String(sb);
 			System.out.println(sb.toString());
 		}
@@ -1356,39 +1356,39 @@ public class MiscTest
 		String url = "https://static.csdi.gov.hk/csdi-webpage/download/83cd933a39c7525581d6aa429a981c90/fgdb";
 
  		List<InetSocketAddress> dnsServerAddresses = List.of(new InetSocketAddress("8.8.8.8", 53), new InetSocketAddress("1.1.1.1", 53));
-        reactor.netty.http.client.HttpClient httpClient = reactor.netty.http.client.HttpClient.create()
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 90000)
+		reactor.netty.http.client.HttpClient httpClient = reactor.netty.http.client.HttpClient.create()
+			.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 90000)
 
-            // Increase receive buffer
-            .option(ChannelOption.SO_RCVBUF, 32 * 1024 * 1024)
+			// Increase receive buffer
+			.option(ChannelOption.SO_RCVBUF, 32 * 1024 * 1024)
 
-            // Increase send buffer
-            .option(ChannelOption.SO_SNDBUF, 32 * 1024 * 1024)
+			// Increase send buffer
+			.option(ChannelOption.SO_SNDBUF, 32 * 1024 * 1024)
 
-            // Disable Nagle's algorithm for fast transmission
-            .option(ChannelOption.TCP_NODELAY, true)
+			// Disable Nagle's algorithm for fast transmission
+			.option(ChannelOption.TCP_NODELAY, true)
 
-            // Force large buffer size
-            .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(32 * 1024 * 1024))
+			// Force large buffer size
+			.option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(32 * 1024 * 1024))
 
-            // 2 hours read timeout
-            .responseTimeout(Duration.ofHours(2))
+			// 2 hours read timeout
+			.responseTimeout(Duration.ofHours(2))
 
-            .doOnConnected(conn -> conn
-                // 2 hours read timeout
-                .addHandlerLast(new io.netty.handler.timeout.ReadTimeoutHandler(2 * 60 * 60))
-                // 2 hours write timeout
-                .addHandlerLast(new io.netty.handler.timeout.WriteTimeoutHandler(2 * 60 * 60))
-                // 90 seconds idle timeout for read/write/all
-                .addHandlerLast(new io.netty.handler.timeout.IdleStateHandler(90, 90, 90))
-            )
-            // Enable compression if applicable
-            .compress(false)
-            // Enable detailed logging (useful for debugging)
-            //.wiretap(true)
+			.doOnConnected(conn -> conn
+				// 2 hours read timeout
+				.addHandlerLast(new io.netty.handler.timeout.ReadTimeoutHandler(2 * 60 * 60))
+				// 2 hours write timeout
+				.addHandlerLast(new io.netty.handler.timeout.WriteTimeoutHandler(2 * 60 * 60))
+				// 90 seconds idle timeout for read/write/all
+				.addHandlerLast(new io.netty.handler.timeout.IdleStateHandler(90, 90, 90))
+			)
+			// Enable compression if applicable
+			.compress(false)
+			// Enable detailed logging (useful for debugging)
+			//.wiretap(true)
 
-            //tmp
-            .wiretap("reactor.netty.http.client.HttpClient", io.netty.handler.logging.LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL); // Log everything
+			//tmp
+			.wiretap("reactor.netty.http.client.HttpClient", io.netty.handler.logging.LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL); // Log everything
 
 		httpClient = httpClient.proxy(proxy -> {
 //			ProxyProvider.Builder proxyBuilder = 
@@ -1413,20 +1413,20 @@ public class MiscTest
 
 		httpClient = httpClient.resolver(dnsResolverGroup);
 
-        // Create custom ExchangeStrategies (for controlling how data is serialized and deserialized)
-        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-            .codecs(configurer -> {
-                // Set a larger buffer size (32 MB here)
-                configurer.defaultCodecs().maxInMemorySize(32 * 1024 * 1024);
-                // Log requests for debugging
-                configurer.defaultCodecs().enableLoggingRequestDetails(true);
-            }).build();
+		// Create custom ExchangeStrategies (for controlling how data is serialized and deserialized)
+		ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+			.codecs(configurer -> {
+				// Set a larger buffer size (32 MB here)
+				configurer.defaultCodecs().maxInMemorySize(32 * 1024 * 1024);
+				// Log requests for debugging
+				configurer.defaultCodecs().enableLoggingRequestDetails(true);
+			}).build();
 
 		WebClient.Builder builder = WebClient.builder();
-        WebClient webClient = builder
-            .clientConnector(new ReactorClientHttpConnector(httpClient)) // Use the custom HttpClient
-            .exchangeStrategies(exchangeStrategies) // Use the custom ExchangeStrategies
-            .build();
+		WebClient webClient = builder
+			.clientConnector(new ReactorClientHttpConnector(httpClient)) // Use the custom HttpClient
+			.exchangeStrategies(exchangeStrategies) // Use the custom ExchangeStrategies
+			.build();
 
 		DataBuffer buffer = webClient.get()
 			.uri(url)
@@ -1489,24 +1489,45 @@ public class MiscTest
 		byte[] plainText = "The Quick Brown Fox Jumps Over The Lazy Dog. 12345!".getBytes(StandardCharsets.UTF_8);
 		byte[] key = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, (byte)0x88, (byte)0x99, (byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd, (byte)0xee, (byte)0xff};
 		byte[] iv = {1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0};
-        try {
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
-            SecretKey secretKey = new SecretKeySpec(key, "AES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
+		try {
+			Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+			GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+			SecretKey secretKey = new SecretKeySpec(key, "AES");
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
 
-            byte[] encryptedData = cipher.doFinal(plainText);
+			byte[] encryptedData = cipher.doFinal(plainText);
 			StringBuilderUTF8 sb = new StringBuilderUTF8();
 			sb.appendHexBuff(encryptedData, 0, encryptedData.length, (byte)' ', LineBreakType.CRLF);
 			System.out.println("AES128.Encrypt: " + sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void aes256GCMTest()
+	{
+		byte[] plainText = "The Quick Brown Fox Jumps Over The Lazy Dog. 12345!".getBytes(StandardCharsets.UTF_8);
+		byte[] key = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, (byte)0x88, (byte)0x99, (byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd, (byte)0xee, (byte)0xff,
+			(byte)0xff, (byte)0xee, (byte)0xdd, (byte)0xcc, (byte)0xbb, (byte)0xaa, (byte)0x99, (byte)0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00};
+		byte[] iv = {1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0};
+		try {
+			Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+			GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+			SecretKey secretKey = new SecretKeySpec(key, "AES");
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
+
+			byte[] encryptedData = cipher.doFinal(plainText);
+			StringBuilderUTF8 sb = new StringBuilderUTF8();
+			sb.appendHexBuff(encryptedData, 0, encryptedData.length, (byte)' ', LineBreakType.CRLF);
+			System.out.println("AES256.Encrypt: " + sb.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String args[]) throws Exception
 	{
-		int type = 70;
+		int type = 71;
 		switch (type)
 		{
 		case 0:
@@ -1721,6 +1742,9 @@ public class MiscTest
 			break;
 		case 70:
 			aes128GCMTest();
+			break;
+		case 71:
+			aes256GCMTest();
 			break;
 		}
 	}
